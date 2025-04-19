@@ -6,17 +6,17 @@ import (
 )
 
 type InitService struct {
-	getProblemIds  out.GetProblemIdsPort
-	makeProblemDir out.MakeProblemDirPort
+	GetProblemIds  out.GetProblemIdsPort
+	MakeProblemDir out.MakeProblemDirPort
 }
 
 func (s *InitService) Init(c model.ContestId) error {
-	ids, err := s.getProblemIds.GetProblemIds(c)
+	ids, err := s.GetProblemIds.GetProblemIds(c)
 	if err != nil {
 		return err
 	}
 	for _, id := range ids {
-		err := s.makeProblemDir.MakeProblemDir(c, id)
+		err := s.MakeProblemDir.MakeProblemDir(c, id)
 		if err != nil {
 			return err
 		}

@@ -1,4 +1,4 @@
-package service
+package service_test
 
 import (
 	"errors"
@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/ppdx999/kyopro/internal/application/domain/model"
+	"github.com/ppdx999/kyopro/internal/application/domain/service"
 )
 
 func NewProblems(ids ...string) []*model.Problem {
@@ -110,9 +111,9 @@ func TestInitService(t *testing.T) {
 			makeProblemDirPort := NewMockMakeProblemDirPort()
 			makeProblemDirPort.err = tt.makeProblemDirErr
 
-			service := &InitService{
-				getProblemIds:  getProblemIdsPort,
-				makeProblemDir: makeProblemDirPort,
+			service := &service.InitService{
+				GetProblemIds:  getProblemIdsPort,
+				MakeProblemDir: makeProblemDirPort,
 			}
 
 			err := service.Init(model.ContestId(tt.contestId))
