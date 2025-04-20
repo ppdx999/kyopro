@@ -30,3 +30,13 @@ func (s *MakeProblemDirImpl) MakeProblemDir(c model.ContestId, p model.ProblemId
 	}
 	return nil
 }
+
+func NewMakeProblemDirImpl(
+	MakePublicDir port.MakePublicDir,
+	GetWorkspace GetWorkspace,
+) *MakeProblemDirImpl {
+	return &MakeProblemDirImpl{
+		MakePublicDir: MakePublicDir,
+		GetWorkspace:  GetWorkspace,
+	}
+}

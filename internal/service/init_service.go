@@ -30,3 +30,13 @@ func (s *InitServiceImpl) Init(c model.ContestId) error {
 	}
 	return nil
 }
+
+func NewInitServiceImpl(
+	GetProblemIds helper.GetProblemIds,
+	MakeProblemDir helper.MakeProblemDir,
+) *InitServiceImpl {
+	return &InitServiceImpl{
+		GetProblemIds:  GetProblemIds,
+		MakeProblemDir: MakeProblemDir,
+	}
+}

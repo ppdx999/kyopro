@@ -26,3 +26,9 @@ func (g *GetWorkspaceImpl) GetWorkspace() (*model.Workspace, error) {
 	}
 	return model.NewWorkspace(wd), nil
 }
+
+func NewGetWorkspaceImpl(GetWd port.GetWd) *GetWorkspaceImpl {
+	return &GetWorkspaceImpl{
+		GetWd: GetWd,
+	}
+}
