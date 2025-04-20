@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/ppdx999/kyopro/internal/application/domain/model"
-	"github.com/ppdx999/kyopro/internal/application/domain/service"
+	"github.com/ppdx999/kyopro/internal/model"
+	"github.com/ppdx999/kyopro/internal/service"
 )
 
 func NewProblems(ids ...string) []*model.Problem {
@@ -18,29 +18,29 @@ func NewProblems(ids ...string) []*model.Problem {
 	return problems
 }
 
-type MockGetProblemIdsPort struct {
+type MockGetProblemIds struct {
 	problemIds []model.ProblemId
 	err        error
 }
 
-func NewMockGetProblemIdsPort() *MockGetProblemIdsPort {
-	return &MockGetProblemIdsPort{}
+func NewMockGetProblemIds() *MockGetProblemIds {
+	return &MockGetProblemIds{}
 }
 
-func (m *MockGetProblemIdsPort) GetProblemIds(c model.ContestId) ([]model.ProblemId, error) {
+func (m *MockGetProblemIds) GetProblemIds(c model.ContestId) ([]model.ProblemId, error) {
 	return m.problemIds, m.err
 }
 
-type MockMakeProblemDirPort struct {
+type MockMakeProblemDir struct {
 	createdDirs []string
 	err         error
 }
 
-func NewMockMakeProblemDirPort() *MockMakeProblemDirPort {
-	return &MockMakeProblemDirPort{}
+func NewMockMakeProblemDir() *MockMakeProblemDir {
+	return &MockMakeProblemDir{}
 }
 
-func (m *MockMakeProblemDirPort) MakeProblemDir(c model.ContestId, p model.ProblemId) error {
+func (m *MockMakeProblemDir) MakeProblemDir(c model.ContestId, p model.ProblemId) error {
 	if m.err != nil {
 		return m.err
 	}
@@ -48,7 +48,7 @@ func (m *MockMakeProblemDirPort) MakeProblemDir(c model.ContestId, p model.Probl
 	return m.err
 }
 
-func (m *MockMakeProblemDirPort) CreatedDirs() []string {
+func (m *MockMakeProblemDir) CreatedDirs() []string {
 	return m.createdDirs
 }
 func TestInitService(t *testing.T) {
@@ -105,15 +105,15 @@ func TestInitService(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			getProblemIdsPort := NewMockGetProblemIdsPort()
-			getProblemIdsPort.problemIds = tt.getProblemIds
-			getProblemIdsPort.err = tt.getProblemIdsErr
-			makeProblemDirPort := NewMockMakeProblemDirPort()
-			makeProblemDirPort.err = tt.makeProblemDirErr
+			getProblemIds := NewMockGetProblemIds()
+			getProblemIds.problemIds = tt.getProblemIds
+			getProblemIds.err = tt.getProblemIdsErr
+			makeProblemDir := NewMockMakeProblemDir()
+			makeProblemDir.err = tt.makeProblemDirErr
 
-			service := &service.InitService{
-				GetProblemIds:  getProblemIdsPort,
-				MakeProblemDir: makeProblemDirPort,
+			service := &service.InitServiceImpl{
+				GetProblemIds:  getProblemIds,
+				MakeProblemDir: makeProblemDir,
 			}
 
 			err := service.Init(model.ContestId(tt.contestId))
@@ -134,7 +134,7 @@ func TestInitService(t *testing.T) {
 				return
 			}
 
-			gotCreatedDirs := makeProblemDirPort.CreatedDirs()
+			gotCreatedDirs := makeProblemDir.CreatedDirs()
 			if !reflect.DeepEqual(gotCreatedDirs, tt.wantCreatedDirs) {
 				t.Errorf("expected created dirs %v, but got %v", tt.wantCreatedDirs, gotCreatedDirs)
 			}
