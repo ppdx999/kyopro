@@ -12,43 +12,71 @@ import (
 	service_helper_port "github.com/ppdx999/kyopro/internal/service/helper/port"
 )
 
-func InitializeGetWorkspaceImpl() *service_helper.GetWorkspaceImpl {
+func InitializeConsole() infra.Console {
+	wire.Build(
+		infra.NewConsoleImpl,
+		wire.Bind(new(infra.Console), new(*infra.ConsoleImpl)),
+	)
+	return nil
+}
+
+func InitializeGetWd() service_helper_port.GetWd {
 	wire.Build(
 		infra.NewFsImple,
 		wire.Bind(new(service_helper_port.GetWd), new(*infra.FsImpl)),
-		service_helper.NewGetWorkspaceImpl,
 	)
-	return &service_helper.GetWorkspaceImpl{}
+	return nil
 }
 
-func InitializeMakeProblemDirImpl() *service_helper.MakeProblemDirImpl {
+func InitializeMakePublicDir() service_helper_port.MakePublicDir {
 	wire.Build(
-		wire.Bind(new(service_helper_port.MakePublicDir), new(*infra.FsImpl)),
 		infra.NewFsImple,
-		InitializeGetWorkspaceImpl,
-		wire.Bind(new(service_helper.GetWorkspace), new(*service_helper.GetWorkspaceImpl)),
-		service_helper.NewMakeProblemDirImpl,
+		wire.Bind(new(service_helper_port.MakePublicDir), new(*infra.FsImpl)),
 	)
-	return &service_helper.MakeProblemDirImpl{}
+	return nil
 }
 
-func InitializeInitServiceImpl() *service.InitServiceImpl {
+func InitializeGetWorkspace() service_helper.GetWorkspace {
 	wire.Build(
-		InitializeMakeProblemDirImpl,
+		InitializeGetWd,
+		service_helper.NewGetWorkspaceImpl,
+		wire.Bind(new(service_helper.GetWorkspace), new(*service_helper.GetWorkspaceImpl)),
+	)
+	return nil
+}
+
+func InitializeMakeProblemDir() service_helper.MakeProblemDir {
+	wire.Build(
+		InitializeMakePublicDir,
+		InitializeGetWorkspace,
+		service_helper.NewMakeProblemDirImpl,
 		wire.Bind(new(service_helper.MakeProblemDir), new(*service_helper.MakeProblemDirImpl)),
+	)
+	return nil
+}
+
+func InitializeGetProblemIds() service_helper.GetProblemIds {
+	wire.Build(
 		service_helper.NewGetProblemIdsImpl,
 		wire.Bind(new(service_helper.GetProblemIds), new(*service_helper.GetProblemIdsImpl)),
-		service.NewInitServiceImpl,
 	)
-	return &service.InitServiceImpl{}
+	return nil
+}
+
+func InitializeInitService() service.InitService {
+	wire.Build(
+		InitializeGetProblemIds,
+		InitializeMakeProblemDir,
+		service.NewInitServiceImpl,
+		wire.Bind(new(service.InitService), new(*service.InitServiceImpl)),
+	)
+	return nil
 }
 
 func InitializeInitCli() *cli.InitCli {
 	wire.Build(
-		infra.NewConsoleImpl,
-		wire.Bind(new(infra.Console), new(*infra.ConsoleImpl)),
-		InitializeInitServiceImpl,
-		wire.Bind(new(service.InitService), new(*service.InitServiceImpl)),
+		InitializeConsole,
+		InitializeInitService,
 		cli.NewInitCli,
 	)
 	return &cli.InitCli{}

@@ -11,33 +11,54 @@ import (
 	"github.com/ppdx999/kyopro/internal/infra"
 	"github.com/ppdx999/kyopro/internal/service"
 	"github.com/ppdx999/kyopro/internal/service/helper"
+	"github.com/ppdx999/kyopro/internal/service/helper/port"
 )
 
 // Injectors from wire.go:
 
-func InitializeGetWorkspaceImpl() *helper.GetWorkspaceImpl {
+func InitializeConsole() infra.Console {
+	consoleImpl := infra.NewConsoleImpl()
+	return consoleImpl
+}
+
+func InitializeGetWd() port.GetWd {
 	fsImpl := infra.NewFsImple()
-	getWorkspaceImpl := helper.NewGetWorkspaceImpl(fsImpl)
+	return fsImpl
+}
+
+func InitializeMakePublicDir() port.MakePublicDir {
+	fsImpl := infra.NewFsImple()
+	return fsImpl
+}
+
+func InitializeGetWorkspace() helper.GetWorkspace {
+	getWd := InitializeGetWd()
+	getWorkspaceImpl := helper.NewGetWorkspaceImpl(getWd)
 	return getWorkspaceImpl
 }
 
-func InitializeMakeProblemDirImpl() *helper.MakeProblemDirImpl {
-	fsImpl := infra.NewFsImple()
-	getWorkspaceImpl := InitializeGetWorkspaceImpl()
-	makeProblemDirImpl := helper.NewMakeProblemDirImpl(fsImpl, getWorkspaceImpl)
+func InitializeMakeProblemDir() helper.MakeProblemDir {
+	makePublicDir := InitializeMakePublicDir()
+	getWorkspace := InitializeGetWorkspace()
+	makeProblemDirImpl := helper.NewMakeProblemDirImpl(makePublicDir, getWorkspace)
 	return makeProblemDirImpl
 }
 
-func InitializeInitServiceImpl() *service.InitServiceImpl {
+func InitializeGetProblemIds() helper.GetProblemIds {
 	getProblemIdsImpl := helper.NewGetProblemIdsImpl()
-	makeProblemDirImpl := InitializeMakeProblemDirImpl()
-	initServiceImpl := service.NewInitServiceImpl(getProblemIdsImpl, makeProblemDirImpl)
+	return getProblemIdsImpl
+}
+
+func InitializeInitService() service.InitService {
+	getProblemIds := InitializeGetProblemIds()
+	makeProblemDir := InitializeMakeProblemDir()
+	initServiceImpl := service.NewInitServiceImpl(getProblemIds, makeProblemDir)
 	return initServiceImpl
 }
 
 func InitializeInitCli() *cli.InitCli {
-	consoleImpl := infra.NewConsoleImpl()
-	initServiceImpl := InitializeInitServiceImpl()
-	initCli := cli.NewInitCli(consoleImpl, initServiceImpl)
+	console := InitializeConsole()
+	initService := InitializeInitService()
+	initCli := cli.NewInitCli(console, initService)
 	return initCli
 }
