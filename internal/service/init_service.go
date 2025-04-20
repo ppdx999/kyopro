@@ -5,6 +5,9 @@ import (
 	"github.com/ppdx999/kyopro/internal/service/helper"
 )
 
+/*
+InitServiceは問題の一覧を取得して、それぞれの問題のディレクトリを作成します。
+*/
 type InitService interface {
 	Init(c model.ContestId) error
 }
