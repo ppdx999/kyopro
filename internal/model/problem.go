@@ -7,6 +7,10 @@ type Problem struct {
 }
 
 func NewProblem(id string) *Problem {
+	if id == "" {
+		panic("problem id is empty")
+	}
+
 	return &Problem{
 		ID: ProblemId(id),
 	}

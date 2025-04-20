@@ -7,6 +7,9 @@ type Contest struct {
 }
 
 func NewContest(id string) *Contest {
+	if id == "" {
+		panic("contest id is empty")
+	}
 	return &Contest{
 		ID: ContestId(id),
 	}
