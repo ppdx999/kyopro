@@ -74,3 +74,21 @@ func (a *Atcoder) GetProblemIds(contest model.ContestId) ([]model.ProblemId, err
 	}
 	return a.ExtractProblemIds(string(body)), nil
 }
+
+func (a *Atcoder) LoginCheck() (bool, error) {
+	path := "/contests/abc001/submit"
+	resp, err := a.get(path)
+	if err != nil {
+		return false, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return false, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
+	if resp.Request.URL.Path != path {
+		return false, nil
+	}
+
+	return true, nil
+}
