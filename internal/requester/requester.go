@@ -1,4 +1,4 @@
-package infra
+package requester
 
 import "net/http"
 

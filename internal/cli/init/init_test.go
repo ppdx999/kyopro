@@ -1,12 +1,13 @@
-package cli_test
+package init_test
 
 import (
 	"errors"
 	"testing"
 
 	"github.com/ppdx999/kyopro/internal/cli"
-	"github.com/ppdx999/kyopro/internal/infra/testutil"
+	cli_init "github.com/ppdx999/kyopro/internal/cli/init"
 	"github.com/ppdx999/kyopro/internal/model"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
 
 type mockInitUsecase struct {
@@ -57,7 +58,7 @@ func TestParseArgs(t *testing.T) {
 			console := testutil.NewMockConsole()
 			usecase := &mockInitUsecase{}
 
-			initCli := cli.NewInitCli(console, usecase)
+			initCli := cli_init.NewInitCli(console, usecase)
 			opt, err := initCli.ParseArgs(tt.args)
 
 			if (err != nil) != tt.wantErr {
@@ -103,7 +104,7 @@ func TestRun(t *testing.T) {
 			console := testutil.NewMockConsole()
 			usecase := &mockInitUsecase{err: tt.ucErr}
 
-			initCli := cli.NewInitCli(console, usecase)
+			initCli := cli_init.NewInitCli(console, usecase)
 			got := initCli.Run(tt.args)
 			if got != tt.exitCode {
 				t.Errorf("Run() = %v, want %v", got, tt.exitCode)

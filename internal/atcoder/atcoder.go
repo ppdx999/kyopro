@@ -1,4 +1,4 @@
-package infra
+package atcoder
 
 import (
 	"fmt"
@@ -9,14 +9,15 @@ import (
 	"strings"
 
 	"github.com/ppdx999/kyopro/internal/model"
+	"github.com/ppdx999/kyopro/internal/requester"
 )
 
 type Atcoder struct {
 	baseUrl *url.URL
-	r       Requester
+	r       requester.Requester
 }
 
-func NewAtcoder(r Requester) *Atcoder {
+func NewAtcoder(r requester.Requester) *Atcoder {
 	baseUrl, _ := url.Parse("https://atcoder.jp")
 	return &Atcoder{
 		baseUrl: baseUrl,

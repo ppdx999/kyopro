@@ -1,4 +1,4 @@
-package helper_test
+package init_test
 
 import (
 	"errors"
@@ -6,8 +6,66 @@ import (
 	"testing"
 
 	"github.com/ppdx999/kyopro/internal/model"
-	"github.com/ppdx999/kyopro/internal/service/helper"
+	service "github.com/ppdx999/kyopro/internal/service/init"
 )
+
+type MockGetWd struct {
+	path string
+	err  error
+}
+
+func (m MockGetWd) GetWd() (string, error) {
+	return m.path, m.err
+}
+
+func GetWorkspaceTest(t *testing.T) {
+	tests := []struct {
+		name     string
+		getwd    string
+		getwdErr error
+		wantErr  bool
+		want     *model.Workspace
+	}{
+		{
+			name:     "success",
+			getwd:    "/user/current/workdir",
+			getwdErr: nil,
+			wantErr:  false,
+			want: &model.Workspace{
+				Path: "/user/current/workdir",
+			},
+		},
+		{
+			name:     "failed getwd",
+			getwd:    "/user/current/workdir",
+			getwdErr: errors.New("failed getwd"),
+			wantErr:  true,
+			want:     &model.Workspace{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockGetwd := MockGetWd{
+				path: tt.getwd,
+				err:  tt.getwdErr,
+			}
+
+			service := service.GetWorkspaceImpl{
+				GetWd: mockGetwd,
+			}
+
+			got, err := service.GetWorkspace()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetWorkspace() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetWorkspace() = %v, want %v", got, tt.want)
+				return
+			}
+		})
+	}
+}
 
 type MockMakePublicDir struct {
 	createdDirs []string
@@ -92,7 +150,7 @@ func TestMakeProblemDir(t *testing.T) {
 			getWorkspace.workspace = tt.workspace
 			getWorkspace.err = tt.getWorkspaceErr
 
-			service := &helper.MakeProblemDirImpl{
+			service := &service.MakeProblemDirImpl{
 				MakePublicDir: makePublicDir,
 				GetWorkspace:  getWorkspace,
 			}

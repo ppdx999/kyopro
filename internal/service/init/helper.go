@@ -1,11 +1,38 @@
-package helper
+package init
 
 import (
 	"path/filepath"
 
 	"github.com/ppdx999/kyopro/internal/model"
-	"github.com/ppdx999/kyopro/internal/service/helper/port"
 )
+
+/*
+GetWorkspaceはWorkspaceを取得します
+*/
+type GetWorkspace interface {
+	GetWorkspace() (*model.Workspace, error)
+}
+
+type GetWorkspaceImpl struct {
+	GetWd GetWd
+}
+
+/*
+GetWorkspaceは現在のワークディレクトリをもとにWorkspaceを取得します
+*/
+func (g *GetWorkspaceImpl) GetWorkspace() (*model.Workspace, error) {
+	wd, err := g.GetWd.GetWd()
+	if err != nil {
+		return nil, err
+	}
+	return model.NewWorkspace(wd), nil
+}
+
+func NewGetWorkspaceImpl(GetWd GetWd) *GetWorkspaceImpl {
+	return &GetWorkspaceImpl{
+		GetWd: GetWd,
+	}
+}
 
 /*
 MakeProblemDirは問題ディレクトリをWorkspaceに作成します
@@ -15,7 +42,7 @@ type MakeProblemDir interface {
 }
 
 type MakeProblemDirImpl struct {
-	MakePublicDir port.MakePublicDir
+	MakePublicDir MakePublicDir
 	GetWorkspace  GetWorkspace
 }
 
@@ -32,7 +59,7 @@ func (s *MakeProblemDirImpl) MakeProblemDir(c model.ContestId, p model.ProblemId
 }
 
 func NewMakeProblemDirImpl(
-	MakePublicDir port.MakePublicDir,
+	MakePublicDir MakePublicDir,
 	GetWorkspace GetWorkspace,
 ) *MakeProblemDirImpl {
 	return &MakeProblemDirImpl{

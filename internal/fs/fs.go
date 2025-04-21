@@ -1,10 +1,10 @@
-package infra
+package fs
 
 import "os"
 
 type FsImpl struct{}
 
-func NewFsImple() *FsImpl {
+func NewFsImpl() *FsImpl {
 	return &FsImpl{}
 }
 

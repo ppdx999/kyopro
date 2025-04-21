@@ -1,4 +1,4 @@
-package infra_test
+package atcoder_test
 
 import (
 	"errors"
@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/ppdx999/kyopro/internal/infra"
-	"github.com/ppdx999/kyopro/internal/infra/testutil"
+	"github.com/ppdx999/kyopro/internal/atcoder"
 	"github.com/ppdx999/kyopro/internal/model"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
 
 func TestExtractProblemIds(t *testing.T) {
@@ -33,7 +33,7 @@ func TestExtractProblemIds(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			atcoder := infra.NewAtcoder(&testutil.MockRequester{})
+			atcoder := atcoder.NewAtcoder(&testutil.MockRequester{})
 
 			got := atcoder.ExtractProblemIds(tt.html)
 
@@ -92,7 +92,7 @@ func TestGetProblemIds(t *testing.T) {
 				ResponseBody:       tt.html,
 				ResponseErr:        tt.reqErr,
 			}
-			atcoder := infra.NewAtcoder(&mockRequester)
+			atcoder := atcoder.NewAtcoder(&mockRequester)
 
 			got, err := atcoder.GetProblemIds("abc100")
 

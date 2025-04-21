@@ -1,4 +1,4 @@
-package service_test
+package init_test
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/ppdx999/kyopro/internal/model"
-	"github.com/ppdx999/kyopro/internal/service"
+	service "github.com/ppdx999/kyopro/internal/service/init"
 )
 
 func NewProblems(ids ...string) []*model.Problem {

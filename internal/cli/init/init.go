@@ -1,19 +1,20 @@
-package cli
+package init
 
 import (
 	"errors"
 
-	"github.com/ppdx999/kyopro/internal/infra"
+	"github.com/ppdx999/kyopro/internal/cli"
+	"github.com/ppdx999/kyopro/internal/console"
 	"github.com/ppdx999/kyopro/internal/model"
-	"github.com/ppdx999/kyopro/internal/service"
+	init_service "github.com/ppdx999/kyopro/internal/service/init"
 )
 
 type InitCli struct {
-	cnsl infra.Console
-	srvc service.InitService
+	cnsl console.Console
+	srvc init_service.InitService
 }
 
-func NewInitCli(cnsl infra.Console, srvc service.InitService) *InitCli {
+func NewInitCli(cnsl console.Console, srvc init_service.InitService) *InitCli {
 	return &InitCli{
 		cnsl: cnsl,
 		srvc: srvc,
@@ -58,17 +59,17 @@ func (c *InitCli) ParseArgs(args []string) (*InitCliOpt, error) {
 	}, nil
 }
 
-func (c *InitCli) Run(args []string) ExitCode {
+func (c *InitCli) Run(args []string) cli.ExitCode {
 	opt, err := c.ParseArgs(args)
 	if err != nil {
 		c.ShowUsage()
-		return ExitErr
+		return cli.ExitErr
 	}
 
 	if err := c.srvc.Init(opt.ContestId); err != nil {
 		c.cnsl.WriteErr([]byte(err.Error()))
-		return ExitErr
+		return cli.ExitErr
 	}
 
-	return ExitOK
+	return cli.ExitOK
 }

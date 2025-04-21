@@ -1,21 +1,19 @@
-package service
+package init
 
 import (
 	"github.com/ppdx999/kyopro/internal/model"
-	"github.com/ppdx999/kyopro/internal/service/helper"
-	"github.com/ppdx999/kyopro/internal/service/helper/port"
 )
 
-/*
-InitServiceは問題の一覧を取得して、それぞれの問題のディレクトリを作成します。
-*/
 type InitService interface {
 	Init(c model.ContestId) error
 }
 
+/*
+InitServiceImplは問題の一覧を取得して、それぞれの問題のディレクトリを作成します。
+*/
 type InitServiceImpl struct {
-	GetProblemIds  port.GetProblemIds
-	MakeProblemDir helper.MakeProblemDir
+	GetProblemIds  GetProblemIds
+	MakeProblemDir MakeProblemDir
 }
 
 func (s *InitServiceImpl) Init(c model.ContestId) error {
@@ -33,8 +31,8 @@ func (s *InitServiceImpl) Init(c model.ContestId) error {
 }
 
 func NewInitServiceImpl(
-	GetProblemIds port.GetProblemIds,
-	MakeProblemDir helper.MakeProblemDir,
+	GetProblemIds GetProblemIds,
+	MakeProblemDir MakeProblemDir,
 ) *InitServiceImpl {
 	return &InitServiceImpl{
 		GetProblemIds:  GetProblemIds,
