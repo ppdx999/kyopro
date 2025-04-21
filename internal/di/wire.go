@@ -12,6 +12,10 @@ import (
 	service_helper_port "github.com/ppdx999/kyopro/internal/service/helper/port"
 )
 
+/*********************************************************************
+Infra
+**********************************************************************/
+
 func InitializeConsole() infra.Console {
 	wire.Build(
 		infra.NewConsoleImpl,
@@ -19,6 +23,26 @@ func InitializeConsole() infra.Console {
 	)
 	return nil
 }
+
+func InitializeRequester() infra.Requester {
+	wire.Build(
+		infra.NewRequesterImpl,
+		wire.Bind(new(infra.Requester), new(*infra.RequesterImpl)),
+	)
+	return nil
+}
+
+func InitializeAtcoder() *infra.Atcoder {
+	wire.Build(
+		InitializeRequester,
+		infra.NewAtcoder,
+	)
+	return &infra.Atcoder{}
+}
+
+/*********************************************************************
+Service Helper Port
+**********************************************************************/
 
 func InitializeGetWd() service_helper_port.GetWd {
 	wire.Build(
@@ -36,6 +60,19 @@ func InitializeMakePublicDir() service_helper_port.MakePublicDir {
 	return nil
 }
 
+func InitializeGetProblemIds() service_helper_port.GetProblemIds {
+	wire.Build(
+		InitializeAtcoder,
+		wire.Bind(new(service_helper_port.GetProblemIds), new(*infra.Atcoder)),
+	)
+	return nil
+}
+
+/*
+********************************************************************
+Service Helper
+*********************************************************************
+*/
 func InitializeGetWorkspace() service_helper.GetWorkspace {
 	wire.Build(
 		InitializeGetWd,
@@ -55,14 +92,11 @@ func InitializeMakeProblemDir() service_helper.MakeProblemDir {
 	return nil
 }
 
-func InitializeGetProblemIds() service_helper.GetProblemIds {
-	wire.Build(
-		service_helper.NewGetProblemIdsImpl,
-		wire.Bind(new(service_helper.GetProblemIds), new(*service_helper.GetProblemIdsImpl)),
-	)
-	return nil
-}
-
+/*
+********************************************************************
+Service
+*********************************************************************
+*/
 func InitializeInitService() service.InitService {
 	wire.Build(
 		InitializeGetProblemIds,
@@ -73,6 +107,11 @@ func InitializeInitService() service.InitService {
 	return nil
 }
 
+/*
+********************************************************************
+Cli
+*********************************************************************
+*/
 func InitializeInitCli() *cli.InitCli {
 	wire.Build(
 		InitializeConsole,

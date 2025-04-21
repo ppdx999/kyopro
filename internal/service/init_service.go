@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/ppdx999/kyopro/internal/model"
 	"github.com/ppdx999/kyopro/internal/service/helper"
+	"github.com/ppdx999/kyopro/internal/service/helper/port"
 )
 
 /*
@@ -13,7 +14,7 @@ type InitService interface {
 }
 
 type InitServiceImpl struct {
-	GetProblemIds  helper.GetProblemIds
+	GetProblemIds  port.GetProblemIds
 	MakeProblemDir helper.MakeProblemDir
 }
 
@@ -32,7 +33,7 @@ func (s *InitServiceImpl) Init(c model.ContestId) error {
 }
 
 func NewInitServiceImpl(
-	GetProblemIds helper.GetProblemIds,
+	GetProblemIds port.GetProblemIds,
 	MakeProblemDir helper.MakeProblemDir,
 ) *InitServiceImpl {
 	return &InitServiceImpl{

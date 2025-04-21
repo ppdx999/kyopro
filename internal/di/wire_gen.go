@@ -21,6 +21,17 @@ func InitializeConsole() infra.Console {
 	return consoleImpl
 }
 
+func InitializeRequester() infra.Requester {
+	requesterImpl := infra.NewRequesterImpl()
+	return requesterImpl
+}
+
+func InitializeAtcoder() *infra.Atcoder {
+	requester := InitializeRequester()
+	atcoder := infra.NewAtcoder(requester)
+	return atcoder
+}
+
 func InitializeGetWd() port.GetWd {
 	fsImpl := infra.NewFsImple()
 	return fsImpl
@@ -31,6 +42,16 @@ func InitializeMakePublicDir() port.MakePublicDir {
 	return fsImpl
 }
 
+func InitializeGetProblemIds() port.GetProblemIds {
+	atcoder := InitializeAtcoder()
+	return atcoder
+}
+
+/*
+********************************************************************
+Service Helper
+*********************************************************************
+*/
 func InitializeGetWorkspace() helper.GetWorkspace {
 	getWd := InitializeGetWd()
 	getWorkspaceImpl := helper.NewGetWorkspaceImpl(getWd)
@@ -44,11 +65,11 @@ func InitializeMakeProblemDir() helper.MakeProblemDir {
 	return makeProblemDirImpl
 }
 
-func InitializeGetProblemIds() helper.GetProblemIds {
-	getProblemIdsImpl := helper.NewGetProblemIdsImpl()
-	return getProblemIdsImpl
-}
-
+/*
+********************************************************************
+Service
+*********************************************************************
+*/
 func InitializeInitService() service.InitService {
 	getProblemIds := InitializeGetProblemIds()
 	makeProblemDir := InitializeMakeProblemDir()
@@ -56,6 +77,11 @@ func InitializeInitService() service.InitService {
 	return initServiceImpl
 }
 
+/*
+********************************************************************
+Cli
+*********************************************************************
+*/
 func InitializeInitCli() *cli.InitCli {
 	console := InitializeConsole()
 	initService := InitializeInitService()
