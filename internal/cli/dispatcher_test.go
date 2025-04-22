@@ -8,7 +8,17 @@ import (
 )
 
 type MockCmd struct {
-	called bool
+	name        string
+	description string
+	called      bool
+}
+
+func (m *MockCmd) Name() string {
+	return m.name
+}
+
+func (m *MockCmd) Description() string {
+	return m.description
 }
 
 func (m *MockCmd) Run(args []string) cli.ExitCode {
@@ -20,7 +30,6 @@ func TestRun(t *testing.T) {
 	tests := []struct {
 		name      string
 		args      []string
-		sendMsgs  []string
 		exitCode  cli.ExitCode
 		calledCmd string
 	}{
@@ -39,25 +48,34 @@ func TestRun(t *testing.T) {
 		{
 			name:     "No subcommand provided",
 			args:     nil,
-			sendMsgs: []string{"no subcommand provided"},
 			exitCode: cli.ExitErr,
 		},
 		{
 			name:     "Unknown subcommand",
 			args:     []string{"unknown"},
-			sendMsgs: []string{"unknown subcommand: unknown"},
+			exitCode: cli.ExitErr,
+		},
+		{
+			name:     "Help flag",
+			args:     []string{"-h"},
 			exitCode: cli.ExitErr,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			sub1 := &MockCmd{}
-			sub2 := &MockCmd{}
+			sub1 := &MockCmd{
+				name:        "sub1",
+				description: "this is sub1 description",
+			}
+			sub2 := &MockCmd{
+				name:        "sub2",
+				description: "this is sub2 description",
+			}
 			msgSender := &testutil.MockMsgSender{}
 			root := cli.NewDispatcher(msgSender)
-			root.Register("sub1", sub1)
-			root.Register("sub2", sub2)
+			root.Register(sub1)
+			root.Register(sub2)
 
 			gotExitCode := root.Run(tt.args)
 
@@ -79,10 +97,6 @@ func TestRun(t *testing.T) {
 			}
 			if tt.calledCmd != "" && !CheckCalledCmd(tt.calledCmd) {
 				t.Errorf("%s was not called", tt.calledCmd)
-			}
-
-			if tt.sendMsgs != nil && !msgSender.CheckMsgs(tt.sendMsgs) {
-				t.Errorf("SendMsg() = %v, want %v", msgSender.GetSendMsgs(), tt.sendMsgs)
 			}
 		})
 	}

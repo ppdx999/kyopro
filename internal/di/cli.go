@@ -12,7 +12,7 @@ func Dispatcher() cli.Dispatcher {
 
 func Cmd() cli.Cmd {
 	cmd := Dispatcher()
-	cmd.Register("init", InitCmd())
-	cmd.Register("login", LoginCmd())
+	cmd.Register(InitCmd())
+	cmd.Register(LoginCmd())
 	return &cmd
 }

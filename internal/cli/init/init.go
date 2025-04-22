@@ -1,7 +1,9 @@
 package init
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
 
 	"github.com/ppdx999/kyopro/internal/cli"
 	"github.com/ppdx999/kyopro/internal/model"
@@ -34,6 +36,26 @@ Args:
 Options:
 	-h, --help  Show this screen.
 `
+
+func (c *InitCmd) Name() string {
+	return "init"
+}
+
+func (c *InitCmd) Description() string {
+	return "コンテストの初期設定を行います"
+}
+
+func (c *InitCmd) Usage() string {
+	var buf bytes.Buffer
+
+	buf.WriteString(
+		fmt.Sprintf("%s - %s\n", c.Name(), c.Description()),
+	)
+
+	buf.WriteString(usage)
+
+	return buf.String()
+}
 
 func (c *InitCmd) ParseArgs(args []string) (*InitCmdOpt, error) {
 	if len(args) != 1 {
