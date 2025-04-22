@@ -2,31 +2,31 @@ package di
 
 import init_ "github.com/ppdx999/kyopro/internal/service/init"
 
-func InitializeInitService() init_.InitService {
-	var InitializeGetWd = func() init_.GetWd {
-		return InitializeFsImpl()
+func InitService() init_.InitService {
+	var GetWd = func() init_.GetWd {
+		return FsImpl()
 	}
 
-	var InitializeMakePublicDir = func() init_.MakePublicDir {
-		return InitializeFsImpl()
+	var MakePublicDir = func() init_.MakePublicDir {
+		return FsImpl()
 	}
 
-	var InitializeGetProblemIds = func() init_.GetProblemIds {
-		return InitializeAtcoder()
+	var GetProblemIds = func() init_.GetProblemIds {
+		return Atcoder()
 	}
 
-	var InitializeGetWorkspace = func() init_.GetWorkspace {
-		getWd := InitializeGetWd()
+	var GetWorkspace = func() init_.GetWorkspace {
+		getWd := GetWd()
 		return init_.NewGetWorkspaceImpl(getWd)
 	}
 
-	var InitializeMakeProblemDir = func() init_.MakeProblemDir {
-		makePublicDir := InitializeMakePublicDir()
-		getWorkspace := InitializeGetWorkspace()
+	var MakeProblemDir = func() init_.MakeProblemDir {
+		makePublicDir := MakePublicDir()
+		getWorkspace := GetWorkspace()
 		return init_.NewMakeProblemDirImpl(makePublicDir, getWorkspace)
 	}
 
-	getProblemIds := InitializeGetProblemIds()
-	makeProblemDir := InitializeMakeProblemDir()
+	getProblemIds := GetProblemIds()
+	makeProblemDir := MakeProblemDir()
 	return init_.NewInitServiceImpl(getProblemIds, makeProblemDir)
 }

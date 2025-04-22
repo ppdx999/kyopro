@@ -2,17 +2,17 @@ package di
 
 import "github.com/ppdx999/kyopro/internal/cli"
 
-func InitializeMsgSender() cli.MsgSender {
-	return InitializeConsoleMsgSender()
+func MsgSender() cli.MsgSender {
+	return ConsoleMsgSender()
 }
 
-func InitializeDispatcher() cli.Dispatcher {
-	return *cli.NewDispatcher(InitializeMsgSender())
+func Dispatcher() cli.Dispatcher {
+	return *cli.NewDispatcher(MsgSender())
 }
 
-func InitializeCmd() cli.Cmd {
-	cmd := InitializeDispatcher()
-	cmd.Register("init", InitializeInitCmd())
-	cmd.Register("login", InitializeLoginCmd())
+func Cmd() cli.Cmd {
+	cmd := Dispatcher()
+	cmd.Register("init", InitCmd())
+	cmd.Register("login", LoginCmd())
 	return &cmd
 }

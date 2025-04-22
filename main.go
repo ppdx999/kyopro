@@ -7,6 +7,5 @@ import (
 )
 
 func main() {
-	cmd := di.InitializeCmd()
-	os.Exit(int(cmd.Run(os.Args[1:])))
+	os.Exit(int(di.Cmd().Run(os.Args[1:])))
 }

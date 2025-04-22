@@ -4,51 +4,51 @@ import (
 	"github.com/ppdx999/kyopro/internal/session"
 )
 
-func InitializeSessionPath() session.SessionPath {
-	var InitializeHome = func() session.Home {
-		return InitializeUserHome()
+func SessionPath() session.SessionPath {
+	var Home = func() session.Home {
+		return UserHome()
 	}
 
-	home := InitializeHome()
+	home := Home()
 	return session.NewSessionPath(home)
 }
 
-func InitializeSessionAskerImpl() *session.SessionAskerImpl {
-	var InitializeUserInput = func() session.UserInput {
-		return InitializeUserInputFromConsole()
+func SessionAskerImpl() *session.SessionAskerImpl {
+	var UserInput = func() session.UserInput {
+		return UserInputFromConsole()
 	}
 
-	userInput := InitializeUserInput()
+	userInput := UserInput()
 	return session.NewSessionAskerImpl(userInput)
 }
 
-func InitializeSessionLoaderImpl() *session.SessionLoaderImpl {
-	var InitializeReadSecretFile = func() session.ReadSecretFile {
-		return InitializeFsImpl()
+func SessionLoaderImpl() *session.SessionLoaderImpl {
+	var ReadSecretFile = func() session.ReadSecretFile {
+		return FsImpl()
 	}
 
-	var InitializeExitFile = func() session.ExistFile {
-		return InitializeFsImpl()
+	var ExitFile = func() session.ExistFile {
+		return FsImpl()
 	}
 
-	sessionPath := InitializeSessionPath()
-	exitFile := InitializeExitFile()
-	readSecretFile := InitializeReadSecretFile()
+	sessionPath := SessionPath()
+	exitFile := ExitFile()
+	readSecretFile := ReadSecretFile()
 	return session.NewSessionLoaderImpl(sessionPath, exitFile, readSecretFile)
 }
 
-func InitializeSessionSaverImpl() *session.SessionSaverImpl {
-	var InitializeMakePublicDir = func() session.MakePublicDir {
-		return InitializeFsImpl()
+func SessionSaverImpl() *session.SessionSaverImpl {
+	var MakePublicDir = func() session.MakePublicDir {
+		return FsImpl()
 	}
 
-	var InitializeWriteSecretFile = func() session.WriteSecretFile {
-		return InitializeFsImpl()
+	var WriteSecretFile = func() session.WriteSecretFile {
+		return FsImpl()
 	}
 
-	sessionPath := InitializeSessionPath()
-	makePublicDir := InitializeMakePublicDir()
-	writeSecretFile := InitializeWriteSecretFile()
+	sessionPath := SessionPath()
+	makePublicDir := MakePublicDir()
+	writeSecretFile := WriteSecretFile()
 
 	return session.NewSessionSaverImpl(sessionPath, makePublicDir, writeSecretFile)
 }

@@ -2,14 +2,14 @@ package di
 
 import "github.com/ppdx999/kyopro/internal/user"
 
-func InitializeUserHome() *user.UserHome {
+func UserHome() *user.UserHome {
 	return &user.UserHome{}
 }
 
-func InitializeUserInputFromConsole() *user.UserInputFromConsole {
+func UserInputFromConsole() *user.UserInputFromConsole {
 	return &user.UserInputFromConsole{}
 }
 
-func InitializeConsoleMsgSender() *user.ConsoleMsgSender {
+func ConsoleMsgSender() *user.ConsoleMsgSender {
 	return &user.ConsoleMsgSender{}
 }

@@ -4,6 +4,6 @@ import (
 	"github.com/ppdx999/kyopro/internal/requester"
 )
 
-func InitializeRequester() requester.Requester {
+func Requester() requester.Requester {
 	return requester.NewRequesterImpl()
 }
