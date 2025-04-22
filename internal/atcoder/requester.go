@@ -7,7 +7,9 @@ type AtcoderRequester struct {
 }
 
 func NewAtcoderRequester(sessionLoader SessionLoader) *AtcoderRequester {
-	return &AtcoderRequester{}
+	return &AtcoderRequester{
+		sessionLoader: sessionLoader,
+	}
 }
 
 func (r *AtcoderRequester) Request(req *http.Request) (*http.Response, error) {
