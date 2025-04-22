@@ -10,12 +10,12 @@ import (
 	"github.com/ppdx999/kyopro/internal/testutil"
 )
 
-type mockInitUsecase struct {
+type mockInitService struct {
 	calledWith model.ContestId
 	err        error
 }
 
-func (m *mockInitUsecase) Init(c model.ContestId) error {
+func (m *mockInitService) Init(c model.ContestId) error {
 	m.calledWith = c
 	return m.err
 }
@@ -55,10 +55,10 @@ func TestParseArgs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			usecase := &mockInitUsecase{}
+			service := &mockInitService{}
 			msgSender := &testutil.MockMsgSender{}
 
-			initCli := cli_init.NewInitCli(usecase, msgSender)
+			initCli := cli_init.NewInitCli(service, msgSender)
 			opt, err := initCli.ParseArgs(tt.args)
 
 			if (err != nil) != tt.wantErr {
@@ -101,10 +101,10 @@ func TestRun(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			usecase := &mockInitUsecase{err: tt.ucErr}
+			service := &mockInitService{err: tt.ucErr}
 			msgSender := &testutil.MockMsgSender{}
 
-			initCli := cli_init.NewInitCli(usecase, msgSender)
+			initCli := cli_init.NewInitCli(service, msgSender)
 			got := initCli.Run(tt.args)
 			if got != tt.exitCode {
 				t.Errorf("Run() = %v, want %v", got, tt.exitCode)
