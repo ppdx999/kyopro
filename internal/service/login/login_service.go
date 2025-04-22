@@ -44,15 +44,15 @@ func (l *LoginServiceImpl) Login() error {
 		return err
 	}
 
-	isLogin, err = l.loginChecker.LoginCheck()
-	if err != nil || !isLogin {
-		l.msgSender.SendMsg("ログインに失敗しました")
-		return err
-	}
-
 	err = l.sessionSaver.SaveSession(session)
 	if err != nil {
 		l.msgSender.SendMsg("セッションの保存に失敗しました")
+		return err
+	}
+
+	isLogin, err = l.loginChecker.LoginCheck()
+	if err != nil || !isLogin {
+		l.msgSender.SendMsg("ログインに失敗しました")
 		return err
 	}
 
