@@ -2,17 +2,17 @@ package session
 
 import "github.com/ppdx999/kyopro/internal/model"
 
-type AskSessionImpl struct {
+type SessionAskerImpl struct {
 	userInput UserInput
 }
 
-func NewAskSessionImpl(userInput UserInput) *AskSessionImpl {
-	return &AskSessionImpl{
+func NewSessionAskerImpl(userInput UserInput) *SessionAskerImpl {
+	return &SessionAskerImpl{
 		userInput: userInput,
 	}
 }
 
-func (s *AskSessionImpl) AskSession() (model.SessionSecret, error) {
+func (s *SessionAskerImpl) AskSession() (model.SessionSecret, error) {
 	input, err := s.userInput.UserInput()
 	if err != nil {
 		return "", err

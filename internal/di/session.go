@@ -13,26 +13,26 @@ func InitializeSessionPath() session.SessionPath {
 	return session.NewSessionPath(home)
 }
 
-func InitializeAskSessionImpl() *session.AskSessionImpl {
+func InitializeSessionAskerImpl() *session.SessionAskerImpl {
 	var InitializeUserInput = func() session.UserInput {
 		return InitializeUserInputFromConsole()
 	}
 
 	userInput := InitializeUserInput()
-	return session.NewAskSessionImpl(userInput)
+	return session.NewSessionAskerImpl(userInput)
 }
 
-func InitializeLoadSessionImpl() *session.LoadSessionImpl {
+func InitializeSessionLoaderImpl() *session.SessionLoaderImpl {
 	var InitializeReadSecretFile = func() session.ReadSecretFile {
 		return InitializeFsImpl()
 	}
 
 	sessionPath := InitializeSessionPath()
 	readSecretFile := InitializeReadSecretFile()
-	return session.NewLoadSessionImpl(sessionPath, readSecretFile)
+	return session.NewSessionLoaderImpl(sessionPath, readSecretFile)
 }
 
-func InitializeSaveSessionImpl() *session.SaveSessionImpl {
+func InitializeSessionSaverImpl() *session.SessionSaverImpl {
 	var InitializeMakePublicDir = func() session.MakePublicDir {
 		return InitializeFsImpl()
 	}
@@ -45,5 +45,5 @@ func InitializeSaveSessionImpl() *session.SaveSessionImpl {
 	makePublicDir := InitializeMakePublicDir()
 	writeSecretFile := InitializeWriteSecretFile()
 
-	return session.NewSaveSessionImpl(sessionPath, makePublicDir, writeSecretFile)
+	return session.NewSessionSaverImpl(sessionPath, makePublicDir, writeSecretFile)
 }

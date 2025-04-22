@@ -19,7 +19,7 @@ func (m *MockReadSecretFile) ReadSecretFile(path string) ([]byte, error) {
 	return m.data, m.err
 }
 
-func TestLoadSession(t *testing.T) {
+func TestSessionLoader(t *testing.T) {
 	tests := []struct {
 		name              string
 		sessionPath       string
@@ -65,7 +65,7 @@ func TestLoadSession(t *testing.T) {
 				err:  tt.readSecretFileErr,
 			}
 
-			s := session.NewLoadSessionImpl(
+			s := session.NewSessionLoaderImpl(
 				mockSessionPath,
 				mockReadSecretFile,
 			)
@@ -73,12 +73,12 @@ func TestLoadSession(t *testing.T) {
 			got, err := s.LoadSession()
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("LoadSession() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("SessionLoader() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
 			if got != tt.want {
-				t.Errorf("LoadSession() = %v, want %v", got, tt.want)
+				t.Errorf("SessionLoader() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -31,7 +31,7 @@ func (m *MockWriteSecretFile) WriteSecretFile(path string, data []byte) error {
 	return m.err
 }
 
-func TestSaveSession(t *testing.T) {
+func TestSessionSaver(t *testing.T) {
 	tests := []struct {
 		name                string
 		sessionPath         string
@@ -88,7 +88,7 @@ func TestSaveSession(t *testing.T) {
 				err: tt.writeSecretFileErr,
 			}
 
-			s := session.NewSaveSessionImpl(
+			s := session.NewSessionSaverImpl(
 				mockSessionPath,
 				mockMakePublicDir,
 				mockWriteSecretFile,
@@ -97,7 +97,7 @@ func TestSaveSession(t *testing.T) {
 			err := s.SaveSession(tt.inputSession)
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("SaveSession() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("SessionSaver() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 

@@ -8,43 +8,43 @@ import (
 	"github.com/ppdx999/kyopro/internal/service/login"
 )
 
-type MockLoginCheck struct {
+type MockLoginChecker struct {
 	calltimes int
 	isLogin   []bool
 	err       []error
 }
 
-func (m *MockLoginCheck) LoginCheck() (bool, error) {
+func (m *MockLoginChecker) LoginCheck() (bool, error) {
 	isLogin := m.isLogin[m.calltimes]
 	err := m.err[m.calltimes]
 	m.calltimes++
 	return isLogin, err
 }
 
-type MockAskSession struct {
+type MockSessionAsker struct {
 	session model.SessionSecret
 	err     error
 }
 
-func (m *MockAskSession) AskSession() (model.SessionSecret, error) {
+func (m *MockSessionAsker) AskSession() (model.SessionSecret, error) {
 	return m.session, m.err
 }
 
-type MockSaveSession struct {
+type MockSessionSaver struct {
 	savedSessions []model.SessionSecret
 	err           error
 }
 
-func (m *MockSaveSession) SaveSession(session model.SessionSecret) error {
+func (m *MockSessionSaver) SaveSession(session model.SessionSecret) error {
 	m.savedSessions = append(m.savedSessions, session)
 	return m.err
 }
 
-type MockSendMsg struct {
+type MockMsgSender struct {
 	sendMsgs []string
 }
 
-func (m *MockSendMsg) SendMsg(msg string) {
+func (m *MockMsgSender) SendMsg(msg string) {
 	m.sendMsgs = append(m.sendMsgs, msg)
 }
 
@@ -121,7 +121,7 @@ func TestLogin(t *testing.T) {
 		},
 	}
 
-	var isLoginSuccess = func(sendmsg MockSendMsg) bool {
+	var isLoginSuccess = func(sendmsg MockMsgSender) bool {
 		if len(sendmsg.sendMsgs) == 0 {
 			return false
 		}
@@ -143,20 +143,22 @@ func TestLogin(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			loginCheck := &MockLoginCheck{
-				isLogin: []bool{tt.firstLoginCheck, tt.secondLoginCheck},
-				err:     []error{tt.firstLoginCheckErr, tt.secondLoginCheckErr},
-			}
-			askSession := &MockAskSession{
-				session: tt.askSession,
-				err:     tt.askSessionErr,
-			}
-			saveSession := &MockSaveSession{
-				err: tt.saveSessionErr,
-			}
-			sendMsg := &MockSendMsg{}
+			msgSender := &MockMsgSender{}
 
-			loginService := login.NewLoginServiceImpl(askSession, loginCheck, saveSession, sendMsg)
+			loginService := login.NewLoginServiceImpl(
+				&MockSessionAsker{
+					session: tt.askSession,
+					err:     tt.askSessionErr,
+				},
+				&MockLoginChecker{
+					isLogin: []bool{tt.firstLoginCheck, tt.secondLoginCheck},
+					err:     []error{tt.firstLoginCheckErr, tt.secondLoginCheckErr},
+				},
+				&MockSessionSaver{
+					err: tt.saveSessionErr,
+				},
+				msgSender,
+			)
 
 			err := loginService.Login()
 
@@ -164,8 +166,8 @@ func TestLogin(t *testing.T) {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			if isLoginSuccess(*sendMsg) != tt.wantLoginResult {
-				t.Errorf("Login() login result = %v, wantLoginResult %v", isLoginSuccess(*sendMsg), tt.wantLoginResult)
+			if isLoginSuccess(*msgSender) != tt.wantLoginResult {
+				t.Errorf("Login() login result = %v, wantLoginResult %v", isLoginSuccess(*msgSender), tt.wantLoginResult)
 			}
 		})
 	}

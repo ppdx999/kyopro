@@ -6,25 +6,25 @@ import (
 	"github.com/ppdx999/kyopro/internal/model"
 )
 
-type SaveSessionImpl struct {
+type SessionSaverImpl struct {
 	sessionPath     SessionPath
 	makePublicDir   MakePublicDir
 	writeSecretFile WriteSecretFile
 }
 
-func NewSaveSessionImpl(
+func NewSessionSaverImpl(
 	sessionPath SessionPath,
 	makePublicDir MakePublicDir,
 	writeSecretFile WriteSecretFile,
-) *SaveSessionImpl {
-	return &SaveSessionImpl{
+) *SessionSaverImpl {
+	return &SessionSaverImpl{
 		sessionPath:     sessionPath,
 		makePublicDir:   makePublicDir,
 		writeSecretFile: writeSecretFile,
 	}
 }
 
-func (s *SaveSessionImpl) SaveSession(session model.SessionSecret) error {
+func (s *SessionSaverImpl) SaveSession(session model.SessionSecret) error {
 	path, err := s.sessionPath.SessionPath()
 	if err != nil {
 		return err

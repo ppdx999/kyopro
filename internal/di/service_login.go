@@ -3,25 +3,25 @@ package di
 import "github.com/ppdx999/kyopro/internal/service/login"
 
 func InitializeLoginService() login.LoginService {
-	var InitializeAskSession = func() login.AskSession {
-		return InitializeAskSessionImpl()
+	var InitializeSessionAsker = func() login.SessionAsker {
+		return InitializeSessionAskerImpl()
 	}
 
-	var InitializeLoginCheck = func() login.LoginCheck {
+	var InitializeLoginCheck = func() login.LoginChecker {
 		return InitializeAtcoder()
 	}
 
-	var InitializeSaveSession = func() login.SaveSession {
-		return InitializeSaveSessionImpl()
+	var InitializeSessionSaver = func() login.SessionSaver {
+		return InitializeSessionSaverImpl()
 	}
 
-	var InitializeSendMsg = func() login.SendMsg {
-		return InitializeSendMsgByConsole()
+	var InitializeSendMsg = func() login.MsgSender {
+		return InitializeConsoleMsgSender()
 	}
 
-	askSession := InitializeAskSession()
+	askSession := InitializeSessionAsker()
 	loginCheck := InitializeLoginCheck()
-	saveSession := InitializeSaveSession()
+	saveSession := InitializeSessionSaver()
 	sendMsg := InitializeSendMsg()
 	return login.NewLoginServiceImpl(askSession, loginCheck, saveSession, sendMsg)
 

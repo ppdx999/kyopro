@@ -17,7 +17,7 @@ func (m *MockUserInput) UserInput() (string, error) {
 	return m.input, m.err
 }
 
-func TestAskSession(t *testing.T) {
+func TestSessionAsker(t *testing.T) {
 	tests := []struct {
 		name         string
 		userInput    string
@@ -43,16 +43,16 @@ func TestAskSession(t *testing.T) {
 				input: tt.userInput,
 				err:   tt.userInputErr,
 			}
-			s := session.NewAskSessionImpl(mockUserInput)
+			s := session.NewSessionAskerImpl(mockUserInput)
 
 			got, err := s.AskSession()
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("AskSession() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("SessionAsker() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("AskSession() = %v, want %v", got, tt.want)
+				t.Errorf("SessionAsker() = %v, want %v", got, tt.want)
 			}
 		})
 	}

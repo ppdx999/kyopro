@@ -10,6 +10,6 @@ func InitializeUserInputFromConsole() *user.UserInputFromConsole {
 	return &user.UserInputFromConsole{}
 }
 
-func InitializeSendMsgByConsole() *user.SendMsgByConsole {
-	return &user.SendMsgByConsole{}
+func InitializeConsoleMsgSender() *user.ConsoleMsgSender {
+	return &user.ConsoleMsgSender{}
 }

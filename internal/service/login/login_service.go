@@ -8,54 +8,54 @@ type LoginService interface {
 }
 
 type LoginServiceImpl struct {
-	askSession  AskSession
-	loginCheck  LoginCheck
-	saveSession SaveSession
-	sendMsg     SendMsg
+	sessionAsker SessionAsker
+	loginChecker LoginChecker
+	sessionSaver SessionSaver
+	msgSender    MsgSender
 }
 
 func NewLoginServiceImpl(
-	askSession AskSession,
-	loginCheck LoginCheck,
-	saveSession SaveSession,
-	sendMsg SendMsg,
+	sessionAsker SessionAsker,
+	loginChecker LoginChecker,
+	sessionSaver SessionSaver,
+	msgSender MsgSender,
 ) *LoginServiceImpl {
 	return &LoginServiceImpl{
-		askSession:  askSession,
-		loginCheck:  loginCheck,
-		saveSession: saveSession,
-		sendMsg:     sendMsg,
+		sessionAsker: sessionAsker,
+		loginChecker: loginChecker,
+		sessionSaver: sessionSaver,
+		msgSender:    msgSender,
 	}
 }
 
 func (l *LoginServiceImpl) Login() error {
-	isLogin, err := l.loginCheck.LoginCheck()
+	isLogin, err := l.loginChecker.LoginCheck()
 	if err != nil {
 		return err
 	}
 
 	if isLogin {
-		l.sendMsg.SendMsg("すでにログインしています")
+		l.msgSender.SendMsg("すでにログインしています")
 		return nil
 	}
 
-	session, err := l.askSession.AskSession()
+	session, err := l.sessionAsker.AskSession()
 	if err != nil {
 		return err
 	}
 
-	isLogin, err = l.loginCheck.LoginCheck()
+	isLogin, err = l.loginChecker.LoginCheck()
 	if err != nil || !isLogin {
-		l.sendMsg.SendMsg("ログインに失敗しました")
+		l.msgSender.SendMsg("ログインに失敗しました")
 		return err
 	}
 
-	err = l.saveSession.SaveSession(session)
+	err = l.sessionSaver.SaveSession(session)
 	if err != nil {
-		l.sendMsg.SendMsg("セッションの保存に失敗しました")
+		l.msgSender.SendMsg("セッションの保存に失敗しました")
 		return err
 	}
 
-	l.sendMsg.SendMsg("ログインに成功しました")
+	l.msgSender.SendMsg("ログインに成功しました")
 	return nil
 }

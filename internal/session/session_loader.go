@@ -4,22 +4,22 @@ import (
 	"github.com/ppdx999/kyopro/internal/model"
 )
 
-type LoadSessionImpl struct {
+type SessionLoaderImpl struct {
 	sessionPath    SessionPath
 	readSecretFile ReadSecretFile
 }
 
-func NewLoadSessionImpl(
+func NewSessionLoaderImpl(
 	sessionPath SessionPath,
 	readSecretFile ReadSecretFile,
-) *LoadSessionImpl {
-	return &LoadSessionImpl{
+) *SessionLoaderImpl {
+	return &SessionLoaderImpl{
 		sessionPath:    sessionPath,
 		readSecretFile: readSecretFile,
 	}
 }
 
-func (l *LoadSessionImpl) LoadSession() (model.SessionSecret, error) {
+func (l *SessionLoaderImpl) LoadSession() (model.SessionSecret, error) {
 	path, err := l.sessionPath.SessionPath()
 	if err != nil {
 		return "", err
