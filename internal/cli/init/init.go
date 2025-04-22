@@ -4,20 +4,19 @@ import (
 	"errors"
 
 	"github.com/ppdx999/kyopro/internal/cli"
-	"github.com/ppdx999/kyopro/internal/console"
 	"github.com/ppdx999/kyopro/internal/model"
 	init_service "github.com/ppdx999/kyopro/internal/service/init"
 )
 
 type InitCli struct {
-	cnsl console.Console
-	srvc init_service.InitService
+	srvc      init_service.InitService
+	msgSender cli.MsgSender
 }
 
-func NewInitCli(cnsl console.Console, srvc init_service.InitService) *InitCli {
+func NewInitCli(srvc init_service.InitService, msgSender cli.MsgSender) *InitCli {
 	return &InitCli{
-		cnsl: cnsl,
-		srvc: srvc,
+		srvc:      srvc,
+		msgSender: msgSender,
 	}
 }
 
@@ -35,13 +34,6 @@ Args:
 Options:
 	-h, --help  Show this screen.
 `
-
-func (c *InitCli) ShowUsage() {
-	_, err := c.cnsl.WriteErr([]byte(usage))
-	if err != nil {
-		panic(err)
-	}
-}
 
 func (c *InitCli) ParseArgs(args []string) (*InitCliOpt, error) {
 	if len(args) != 1 {
@@ -62,12 +54,12 @@ func (c *InitCli) ParseArgs(args []string) (*InitCliOpt, error) {
 func (c *InitCli) Run(args []string) cli.ExitCode {
 	opt, err := c.ParseArgs(args)
 	if err != nil {
-		c.ShowUsage()
+		c.msgSender.SendMsg(usage)
 		return cli.ExitErr
 	}
 
 	if err := c.srvc.Init(opt.ContestId); err != nil {
-		c.cnsl.WriteErr([]byte(err.Error()))
+		c.msgSender.SendMsg(err.Error())
 		return cli.ExitErr
 	}
 

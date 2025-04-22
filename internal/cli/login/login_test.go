@@ -6,15 +6,8 @@ import (
 
 	"github.com/ppdx999/kyopro/internal/cli"
 	"github.com/ppdx999/kyopro/internal/cli/login"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockMsgSender struct {
-	sendMsgs []string
-}
-
-func (m *MockMsgSender) SendMsg(msg string) {
-	m.sendMsgs = append(m.sendMsgs, msg)
-}
 
 type MockLoginService struct {
 	err error
@@ -60,7 +53,7 @@ func TestRun(t *testing.T) {
 			mockLoginService := &MockLoginService{
 				err: tt.loginErr,
 			}
-			mockMsgSender := &MockMsgSender{}
+			mockMsgSender := &testutil.MockMsgSender{}
 			cmd := login.NewLoginCli(mockLoginService, mockMsgSender)
 
 			// Act

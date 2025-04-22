@@ -55,10 +55,10 @@ func TestParseArgs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			console := testutil.NewMockConsole()
 			usecase := &mockInitUsecase{}
+			msgSender := &testutil.MockMsgSender{}
 
-			initCli := cli_init.NewInitCli(console, usecase)
+			initCli := cli_init.NewInitCli(usecase, msgSender)
 			opt, err := initCli.ParseArgs(tt.args)
 
 			if (err != nil) != tt.wantErr {
@@ -101,10 +101,10 @@ func TestRun(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			console := testutil.NewMockConsole()
 			usecase := &mockInitUsecase{err: tt.ucErr}
+			msgSender := &testutil.MockMsgSender{}
 
-			initCli := cli_init.NewInitCli(console, usecase)
+			initCli := cli_init.NewInitCli(usecase, msgSender)
 			got := initCli.Run(tt.args)
 			if got != tt.exitCode {
 				t.Errorf("Run() = %v, want %v", got, tt.exitCode)
