@@ -27,9 +27,14 @@ func InitializeSessionLoaderImpl() *session.SessionLoaderImpl {
 		return InitializeFsImpl()
 	}
 
+	var InitializeExitFile = func() session.ExistFile {
+		return InitializeFsImpl()
+	}
+
 	sessionPath := InitializeSessionPath()
+	exitFile := InitializeExitFile()
 	readSecretFile := InitializeReadSecretFile()
-	return session.NewSessionLoaderImpl(sessionPath, readSecretFile)
+	return session.NewSessionLoaderImpl(sessionPath, exitFile, readSecretFile)
 }
 
 func InitializeSessionSaverImpl() *session.SessionSaverImpl {

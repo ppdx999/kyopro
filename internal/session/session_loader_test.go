@@ -19,11 +19,20 @@ func (m *MockReadSecretFile) ReadSecretFile(path string) ([]byte, error) {
 	return m.data, m.err
 }
 
+type MockExistFile struct {
+	exist bool
+}
+
+func (m *MockExistFile) ExistFile(path string) bool {
+	return m.exist
+}
+
 func TestSessionLoader(t *testing.T) {
 	tests := []struct {
 		name              string
 		sessionPath       string
 		sessionPathErr    error
+		existFile         bool
 		readSecretFile    []byte
 		readSecretFileErr error
 		want              model.SessionSecret
@@ -32,25 +41,35 @@ func TestSessionLoader(t *testing.T) {
 		{
 			name:           "正常系",
 			sessionPath:    "/home/user/.kyopro/session",
+			existFile:      true,
 			readSecretFile: []byte("mysecret"),
 			want:           model.SessionSecret("mysecret"),
 		},
 		{
 			name:           "sessionPathがエラー",
+			existFile:      true,
 			sessionPathErr: errors.New("session path error"),
 			wantErr:        true,
 		},
 		{
 			name:              "readSecretFileがエラー",
+			existFile:         true,
 			sessionPath:       "/home/user/.kyopro/session",
 			readSecretFileErr: errors.New("read file error"),
 			wantErr:           true,
 		},
 		{
 			name:           "sessionが空",
+			existFile:      true,
 			sessionPath:    "/home/user/.kyopro/session",
 			readSecretFile: []byte(""),
 			want:           model.SessionSecret(""),
+		},
+		{
+			name:        "sessionファイルが存在しない",
+			existFile:   false,
+			sessionPath: "/home/user/.kyopro/session",
+			want:        model.SessionSecret(""),
 		},
 	}
 
@@ -64,9 +83,13 @@ func TestSessionLoader(t *testing.T) {
 				data: tt.readSecretFile,
 				err:  tt.readSecretFileErr,
 			}
+			mockExistFile := &MockExistFile{
+				exist: tt.existFile,
+			}
 
 			s := session.NewSessionLoaderImpl(
 				mockSessionPath,
+				mockExistFile,
 				mockReadSecretFile,
 			)
 

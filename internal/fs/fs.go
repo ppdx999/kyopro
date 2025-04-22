@@ -19,6 +19,13 @@ func (fs *FsImpl) GetWd() (string, error) {
 	return os.Getwd()
 }
 
+func (fs *FsImpl) ExistFile(path string) bool {
+	if _, err := os.Stat(path); err != nil {
+		return false
+	}
+	return true
+}
+
 func (fs *FsImpl) ReadSecretFile(path string) ([]byte, error) {
 	return os.ReadFile(path)
 }

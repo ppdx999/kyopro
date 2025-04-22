@@ -12,6 +12,10 @@ type MakePublicDir interface {
 	MakePublicDir(path string) error
 }
 
+type ExistFile interface {
+	ExistFile(path string) bool
+}
+
 type ReadSecretFile interface {
 	ReadSecretFile(path string) ([]byte, error)
 }
