@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"os"
+
+	"github.com/ppdx999/kyopro/internal/di"
+)
 
 func main() {
-	fmt.Println("HelloWorld")
+	cmd := di.InitializeCmd()
+	os.Exit(int(cmd.Run(os.Args[1:])))
 }
