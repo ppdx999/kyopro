@@ -9,8 +9,7 @@ func SessionPath() session.SessionPath {
 		return UserHome()
 	}
 
-	home := Home()
-	return session.NewSessionPath(home)
+	return session.NewSessionPath(Home())
 }
 
 func SessionAskerImpl() *session.SessionAskerImpl {
@@ -18,8 +17,7 @@ func SessionAskerImpl() *session.SessionAskerImpl {
 		return UserInputFromConsole()
 	}
 
-	userInput := UserInput()
-	return session.NewSessionAskerImpl(userInput)
+	return session.NewSessionAskerImpl(UserInput())
 }
 
 func SessionLoaderImpl() *session.SessionLoaderImpl {
@@ -31,10 +29,11 @@ func SessionLoaderImpl() *session.SessionLoaderImpl {
 		return FsImpl()
 	}
 
-	sessionPath := SessionPath()
-	exitFile := ExitFile()
-	readSecretFile := ReadSecretFile()
-	return session.NewSessionLoaderImpl(sessionPath, exitFile, readSecretFile)
+	return session.NewSessionLoaderImpl(
+		SessionPath(),
+		ExitFile(),
+		ReadSecretFile(),
+	)
 }
 
 func SessionSaverImpl() *session.SessionSaverImpl {
@@ -46,9 +45,9 @@ func SessionSaverImpl() *session.SessionSaverImpl {
 		return FsImpl()
 	}
 
-	sessionPath := SessionPath()
-	makePublicDir := MakePublicDir()
-	writeSecretFile := WriteSecretFile()
-
-	return session.NewSessionSaverImpl(sessionPath, makePublicDir, writeSecretFile)
+	return session.NewSessionSaverImpl(
+		SessionPath(),
+		MakePublicDir(),
+		WriteSecretFile(),
+	)
 }

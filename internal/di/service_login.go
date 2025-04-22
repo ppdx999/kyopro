@@ -19,10 +19,10 @@ func LoginService() login.LoginService {
 		return ConsoleMsgSender()
 	}
 
-	askSession := SessionAsker()
-	loginCheck := LoginCheck()
-	saveSession := SessionSaver()
-	sendMsg := SendMsg()
-	return login.NewLoginServiceImpl(askSession, loginCheck, saveSession, sendMsg)
-
+	return login.NewLoginServiceImpl(
+		SessionAsker(),
+		LoginCheck(),
+		SessionSaver(),
+		SendMsg(),
+	)
 }

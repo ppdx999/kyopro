@@ -7,10 +7,8 @@ import (
 
 func Atcoder() *atcoder.Atcoder {
 	var AuthRequester = func() requester.Requester {
-		sessionLoader := SessionLoaderImpl()
-		return atcoder.NewAtcoderRequester(sessionLoader)
+		return atcoder.NewAtcoderRequester(SessionLoaderImpl())
 	}
 
-	requester := AuthRequester()
-	return atcoder.NewAtcoder(requester)
+	return atcoder.NewAtcoder(AuthRequester())
 }

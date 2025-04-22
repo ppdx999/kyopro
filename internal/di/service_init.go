@@ -16,17 +16,19 @@ func InitService() init_.InitService {
 	}
 
 	var GetWorkspace = func() init_.GetWorkspace {
-		getWd := GetWd()
-		return init_.NewGetWorkspaceImpl(getWd)
+		return init_.NewGetWorkspaceImpl(GetWd())
 	}
 
 	var MakeProblemDir = func() init_.MakeProblemDir {
-		makePublicDir := MakePublicDir()
-		getWorkspace := GetWorkspace()
-		return init_.NewMakeProblemDirImpl(makePublicDir, getWorkspace)
+		return init_.NewMakeProblemDirImpl(
+			MakePublicDir(),
+			GetWorkspace(),
+		)
 	}
 
-	getProblemIds := GetProblemIds()
-	makeProblemDir := MakeProblemDir()
-	return init_.NewInitServiceImpl(getProblemIds, makeProblemDir)
+	return init_.NewInitServiceImpl(
+		GetProblemIds(),
+		MakeProblemDir(),
+	)
+
 }
