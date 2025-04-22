@@ -54,7 +54,7 @@ func TestRun(t *testing.T) {
 				err: tt.loginErr,
 			}
 			mockMsgSender := &testutil.MockMsgSender{}
-			cmd := login.NewLoginCli(mockLoginService, mockMsgSender)
+			cmd := login.NewLoginCmd(mockLoginService, mockMsgSender)
 
 			// Act
 			exitCode := cmd.Run(tt.args)

@@ -2,8 +2,8 @@ package di
 
 import "github.com/ppdx999/kyopro/internal/cli/login"
 
-func InitializeLoginCli() *login.LoginCli {
-	return login.NewLoginCli(
+func InitializeLoginCmd() *login.LoginCmd {
+	return login.NewLoginCmd(
 		InitializeLoginService(),
 		InitializeMsgSender(),
 	)

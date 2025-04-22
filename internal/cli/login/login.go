@@ -5,13 +5,13 @@ import (
 	"github.com/ppdx999/kyopro/internal/service/login"
 )
 
-type LoginCli struct {
+type LoginCmd struct {
 	srvc      login.LoginService
 	msgSender cli.MsgSender
 }
 
-func NewLoginCli(srvc login.LoginService, msgSender cli.MsgSender) *LoginCli {
-	return &LoginCli{
+func NewLoginCmd(srvc login.LoginService, msgSender cli.MsgSender) *LoginCmd {
+	return &LoginCmd{
 		srvc:      srvc,
 		msgSender: msgSender,
 	}
@@ -25,7 +25,7 @@ Options:
 	-h, --help  ヘルプの表示
 `
 
-func (c *LoginCli) Run(args []string) cli.ExitCode {
+func (c *LoginCmd) Run(args []string) cli.ExitCode {
 	if len(args) != 0 {
 		c.msgSender.SendMsg(usage)
 		return cli.ExitErr

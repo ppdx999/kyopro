@@ -58,7 +58,7 @@ func TestParseArgs(t *testing.T) {
 			service := &mockInitService{}
 			msgSender := &testutil.MockMsgSender{}
 
-			initCli := cli_init.NewInitCli(service, msgSender)
+			initCli := cli_init.NewInitCmd(service, msgSender)
 			opt, err := initCli.ParseArgs(tt.args)
 
 			if (err != nil) != tt.wantErr {
@@ -104,7 +104,7 @@ func TestRun(t *testing.T) {
 			service := &mockInitService{err: tt.ucErr}
 			msgSender := &testutil.MockMsgSender{}
 
-			initCli := cli_init.NewInitCli(service, msgSender)
+			initCli := cli_init.NewInitCmd(service, msgSender)
 			got := initCli.Run(tt.args)
 			if got != tt.exitCode {
 				t.Errorf("Run() = %v, want %v", got, tt.exitCode)

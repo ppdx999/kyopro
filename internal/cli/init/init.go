@@ -8,19 +8,19 @@ import (
 	init_service "github.com/ppdx999/kyopro/internal/service/init"
 )
 
-type InitCli struct {
+type InitCmd struct {
 	srvc      init_service.InitService
 	msgSender cli.MsgSender
 }
 
-func NewInitCli(srvc init_service.InitService, msgSender cli.MsgSender) *InitCli {
-	return &InitCli{
+func NewInitCmd(srvc init_service.InitService, msgSender cli.MsgSender) *InitCmd {
+	return &InitCmd{
 		srvc:      srvc,
 		msgSender: msgSender,
 	}
 }
 
-type InitCliOpt struct {
+type InitCmdOpt struct {
 	ContestId model.ContestId
 }
 
@@ -35,7 +35,7 @@ Options:
 	-h, --help  Show this screen.
 `
 
-func (c *InitCli) ParseArgs(args []string) (*InitCliOpt, error) {
+func (c *InitCmd) ParseArgs(args []string) (*InitCmdOpt, error) {
 	if len(args) != 1 {
 		return nil, errors.New("invalid args")
 	}
@@ -46,12 +46,12 @@ func (c *InitCli) ParseArgs(args []string) (*InitCliOpt, error) {
 		return nil, errors.New("help flag")
 	}
 
-	return &InitCliOpt{
+	return &InitCmdOpt{
 		ContestId: model.ContestId(args[0]),
 	}, nil
 }
 
-func (c *InitCli) Run(args []string) cli.ExitCode {
+func (c *InitCmd) Run(args []string) cli.ExitCode {
 	opt, err := c.ParseArgs(args)
 	if err != nil {
 		c.msgSender.SendMsg(usage)
