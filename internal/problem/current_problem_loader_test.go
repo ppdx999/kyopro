@@ -1,24 +1,13 @@
-package context_test
+package problem_test
 
 import (
 	"errors"
 	"testing"
 
-	"github.com/ppdx999/kyopro/internal/context"
 	"github.com/ppdx999/kyopro/internal/model"
+	"github.com/ppdx999/kyopro/internal/problem"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockGetWd struct {
-	path string
-	err  error
-}
-
-func (m MockGetWd) GetWd() (string, error) {
-	if m.err != nil {
-		return "", m.err
-	}
-	return m.path, nil
-}
 
 func TestLoadCurrentProblem(t *testing.T) {
 	tests := []struct {
@@ -52,11 +41,11 @@ func TestLoadCurrentProblem(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			getWd := MockGetWd{
-				path: tt.getWd,
-				err:  tt.getWdErr,
+			getWd := &testutil.MockGetWd{
+				Wd:  tt.getWd,
+				Err: tt.getWdErr,
 			}
-			l := context.NewCurrentProblemLoaderImpl(getWd)
+			l := problem.NewCurrentProblemLoaderImpl(getWd)
 
 			got, err := l.LoadCurrentProblem()
 

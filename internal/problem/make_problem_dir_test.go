@@ -7,19 +7,8 @@ import (
 
 	"github.com/ppdx999/kyopro/internal/model"
 	"github.com/ppdx999/kyopro/internal/problem"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockGetWd struct {
-	wd  string
-	err error
-}
-
-func (m *MockGetWd) GetWd() (string, error) {
-	if m.err != nil {
-		return "", m.err
-	}
-	return m.wd, nil
-}
 
 type MockDirMaker struct {
 	makedDirs []string
@@ -79,9 +68,9 @@ func TestMakeProblemDir(t *testing.T) {
 				makedDirs: []string{},
 				err:       tt.makePublicDirErr,
 			}
-			getWd := &MockGetWd{
-				wd:  tt.wd,
-				err: tt.getWdErr,
+			getWd := &testutil.MockGetWd{
+				Wd:  tt.wd,
+				Err: tt.getWdErr,
 			}
 
 			m := problem.NewProblemDirMakerImpl(getWd, dirMaker)
