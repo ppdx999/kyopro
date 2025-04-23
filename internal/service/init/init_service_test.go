@@ -23,10 +23,6 @@ type MockGetProblemIds struct {
 	err        error
 }
 
-func NewMockGetProblemIds() *MockGetProblemIds {
-	return &MockGetProblemIds{}
-}
-
 func (m *MockGetProblemIds) GetProblemIds(c model.ContestId) ([]model.ProblemId, error) {
 	return m.problemIds, m.err
 }
@@ -34,10 +30,6 @@ func (m *MockGetProblemIds) GetProblemIds(c model.ContestId) ([]model.ProblemId,
 type MockMakeProblemDir struct {
 	createdDirs []string
 	err         error
-}
-
-func NewMockMakeProblemDir() *MockMakeProblemDir {
-	return &MockMakeProblemDir{}
 }
 
 func (m *MockMakeProblemDir) MakeProblemDir(c model.ContestId, p model.ProblemId) error {
@@ -48,9 +40,6 @@ func (m *MockMakeProblemDir) MakeProblemDir(c model.ContestId, p model.ProblemId
 	return m.err
 }
 
-func (m *MockMakeProblemDir) CreatedDirs() []string {
-	return m.createdDirs
-}
 func TestInitService(t *testing.T) {
 	tests := []struct {
 		name              string
@@ -105,16 +94,18 @@ func TestInitService(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			getProblemIds := NewMockGetProblemIds()
-			getProblemIds.problemIds = tt.getProblemIds
-			getProblemIds.err = tt.getProblemIdsErr
-			makeProblemDir := NewMockMakeProblemDir()
-			makeProblemDir.err = tt.makeProblemDirErr
-
-			service := &service.InitServiceImpl{
-				GetProblemIds:  getProblemIds,
-				MakeProblemDir: makeProblemDir,
+			getProblemIds := &MockGetProblemIds{
+				problemIds: tt.getProblemIds,
+				err:        tt.getProblemIdsErr,
 			}
+			makeProblemDir := &MockMakeProblemDir{
+				err: tt.makeProblemDirErr,
+			}
+
+			service := service.NewInitServiceImpl(
+				getProblemIds,
+				makeProblemDir,
+			)
 
 			err := service.Init(model.ContestId(tt.contestId))
 
@@ -134,9 +125,8 @@ func TestInitService(t *testing.T) {
 				return
 			}
 
-			gotCreatedDirs := makeProblemDir.CreatedDirs()
-			if !reflect.DeepEqual(gotCreatedDirs, tt.wantCreatedDirs) {
-				t.Errorf("expected created dirs %v, but got %v", tt.wantCreatedDirs, gotCreatedDirs)
+			if !reflect.DeepEqual(makeProblemDir.createdDirs, tt.wantCreatedDirs) {
+				t.Errorf("expected created dirs %v, but got %v", tt.wantCreatedDirs, makeProblemDir.createdDirs)
 			}
 		})
 	}
