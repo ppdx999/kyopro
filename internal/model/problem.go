@@ -3,7 +3,8 @@ package model
 type ProblemId string
 
 type Problem struct {
-	ID ProblemId
+	ID      ProblemId
+	Contest *Contest
 }
 
 func NewProblem(id string) *Problem {

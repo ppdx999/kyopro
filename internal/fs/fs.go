@@ -33,3 +33,11 @@ func (fs *FsImpl) ReadSecretFile(path string) ([]byte, error) {
 func (fs *FsImpl) WriteSecretFile(path string, data []byte) error {
 	return os.WriteFile(path, data, 0600)
 }
+
+func (fs *FsImpl) ReadPublicFile(path string) ([]byte, error) {
+	return os.ReadFile(path)
+}
+
+func (fs *FsImpl) WritePublicFile(path string, data []byte) error {
+	return os.WriteFile(path, data, 0644)
+}

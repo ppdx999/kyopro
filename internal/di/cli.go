@@ -14,5 +14,6 @@ func Cmd() cli.Cmd {
 	cmd := Dispatcher()
 	cmd.Register(InitCmd())
 	cmd.Register(LoginCmd())
+	cmd.Register(DownloadCmd())
 	return &cmd
 }
