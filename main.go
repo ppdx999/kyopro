@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/ppdx999/kyopro/internal/di"
+	di "github.com/ppdx999/kyopro/internal/dependency_injection"
 )
 
 func main() {
