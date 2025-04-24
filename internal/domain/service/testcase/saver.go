@@ -7,6 +7,10 @@ import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
 )
 
+type TestCaseSaver interface {
+	SaveTestCase(t *model.TestCase) error
+}
+
 type TestCaseFsSaver struct {
 	wd         GetWd
 	dirMaker   PublicDirMaker

@@ -2,6 +2,7 @@ package init
 
 import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
+	"github.com/ppdx999/kyopro/internal/domain/service/problem"
 )
 
 type InitService interface {
@@ -12,11 +13,11 @@ type InitService interface {
 InitServiceImplは問題の一覧を取得して、それぞれの問題のディレクトリを作成します。
 */
 type InitServiceImpl struct {
-	getter GetProblemIds
-	maker  ProblemDirMaker
+	getter problem.ProblemIdsGetter
+	maker  problem.ProblemDirMaker
 }
 
-func NewInitServiceImpl(g GetProblemIds, m ProblemDirMaker) *InitServiceImpl {
+func NewInitServiceImpl(g problem.ProblemIdsGetter, m problem.ProblemDirMaker) *InitServiceImpl {
 	return &InitServiceImpl{getter: g, maker: m}
 }
 

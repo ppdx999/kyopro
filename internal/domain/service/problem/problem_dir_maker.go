@@ -6,6 +6,10 @@ import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
 )
 
+type ProblemDirMaker interface {
+	MakeProblemDir(c model.ContestId, p model.ProblemId) error
+}
+
 type ProblemDirMakerImpl struct {
 	wd       GetWd
 	dirMaker PublicDirMaker

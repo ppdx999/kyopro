@@ -2,7 +2,11 @@ package di
 
 import "github.com/ppdx999/kyopro/internal/domain/service/testcase"
 
-func TestCaseFsSaver() *testcase.TestCaseFsSaver {
+func TestCaseGetter() testcase.TestCasesGetter {
+	return Atcoder()
+}
+
+func TestCaseSaver() testcase.TestCaseSaver {
 	var WorkspaceGetter = func() testcase.GetWd {
 		return FsImpl()
 	}

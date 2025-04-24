@@ -1,5 +1,10 @@
 package downlaod
 
+import (
+	"github.com/ppdx999/kyopro/internal/domain/service/problem"
+	"github.com/ppdx999/kyopro/internal/domain/service/testcase"
+)
+
 /*
 DownloadServiceは問題のテストケースをダウンロードします。
 */
@@ -8,15 +13,15 @@ type DownloadService interface {
 }
 
 type DownloadServiceImpl struct {
-	loader CurrentProblemLoader
-	getter TestCasesGetter
-	saver  TestCaseSaver
+	loader problem.CurrentProblemLoader
+	getter testcase.TestCasesGetter
+	saver  testcase.TestCaseSaver
 }
 
 func NewDownloadServiceImpl(
-	loader CurrentProblemLoader,
-	getter TestCasesGetter,
-	saver TestCaseSaver,
+	loader problem.CurrentProblemLoader,
+	getter testcase.TestCasesGetter,
+	saver testcase.TestCaseSaver,
 ) *DownloadServiceImpl {
 	return &DownloadServiceImpl{
 		loader: loader,

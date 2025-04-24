@@ -12,7 +12,7 @@ func SessionPath() session.SessionPath {
 	return session.NewSessionPath(Home())
 }
 
-func SessionAskerImpl() *session.SessionAskerImpl {
+func SessionAsker() session.SessionAsker {
 	var UserInput = func() session.UserInput {
 		return UserInputFromConsole()
 	}
@@ -20,7 +20,7 @@ func SessionAskerImpl() *session.SessionAskerImpl {
 	return session.NewSessionAskerImpl(UserInput())
 }
 
-func SessionLoaderImpl() *session.SessionLoaderImpl {
+func SessionLoader() session.SessionLoader {
 	var ReadSecretFile = func() session.ReadSecretFile {
 		return FsImpl()
 	}
@@ -36,7 +36,7 @@ func SessionLoaderImpl() *session.SessionLoaderImpl {
 	)
 }
 
-func SessionSaverImpl() *session.SessionSaverImpl {
+func SessionSaver() session.SessionSaver {
 	var MakePublicDir = func() session.MakePublicDir {
 		return FsImpl()
 	}

@@ -7,15 +7,16 @@ import (
 
 	init_service "github.com/ppdx999/kyopro/internal/application/service/init"
 	"github.com/ppdx999/kyopro/internal/domain/model"
+	"github.com/ppdx999/kyopro/internal/domain/service/user"
 	"github.com/ppdx999/kyopro/internal/presentation/cli"
 )
 
 type InitCmd struct {
 	srvc      init_service.InitService
-	msgSender cli.MsgSender
+	msgSender user.MsgSender
 }
 
-func NewInitCmd(srvc init_service.InitService, msgSender cli.MsgSender) *InitCmd {
+func NewInitCmd(srvc init_service.InitService, msgSender user.MsgSender) *InitCmd {
 	return &InitCmd{
 		srvc:      srvc,
 		msgSender: msgSender,

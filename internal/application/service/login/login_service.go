@@ -1,5 +1,10 @@
 package login
 
+import (
+	"github.com/ppdx999/kyopro/internal/domain/service/session"
+	"github.com/ppdx999/kyopro/internal/domain/service/user"
+)
+
 /*
 LoginServiceはユーザーからSession情報を受け取り、Atcoderにログインして、結果を出力します
 */
@@ -8,17 +13,17 @@ type LoginService interface {
 }
 
 type LoginServiceImpl struct {
-	sessionAsker SessionAsker
-	loginChecker LoginChecker
-	sessionSaver SessionSaver
-	msgSender    MsgSender
+	sessionAsker session.SessionAsker
+	loginChecker user.LoginChecker
+	sessionSaver session.SessionSaver
+	msgSender    user.MsgSender
 }
 
 func NewLoginServiceImpl(
-	sessionAsker SessionAsker,
-	loginChecker LoginChecker,
-	sessionSaver SessionSaver,
-	msgSender MsgSender,
+	sessionAsker session.SessionAsker,
+	loginChecker user.LoginChecker,
+	sessionSaver session.SessionSaver,
+	msgSender user.MsgSender,
 ) *LoginServiceImpl {
 	return &LoginServiceImpl{
 		sessionAsker: sessionAsker,

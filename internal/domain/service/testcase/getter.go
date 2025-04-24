@@ -1,10 +1,6 @@
-package downlaod
+package testcase
 
 import "github.com/ppdx999/kyopro/internal/domain/model"
-
-type CurrentProblemLoader interface {
-	LoadCurrentProblem() (*model.Problem, error)
-}
 
 type TestCasesGetter interface {
 	GetTestCases(
@@ -14,8 +10,4 @@ type TestCasesGetter interface {
 		[]*model.TestCase,
 		error,
 	)
-}
-
-type TestCaseSaver interface {
-	SaveTestCase(t *model.TestCase) error
 }

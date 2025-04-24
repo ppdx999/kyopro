@@ -1,12 +1,16 @@
 package atcoder
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/ppdx999/kyopro/internal/domain/service/session"
+)
 
 type AtcoderRequester struct {
-	sessionLoader SessionLoader
+	sessionLoader session.SessionLoader
 }
 
-func NewAtcoderRequester(sessionLoader SessionLoader) *AtcoderRequester {
+func NewAtcoderRequester(sessionLoader session.SessionLoader) *AtcoderRequester {
 	return &AtcoderRequester{
 		sessionLoader: sessionLoader,
 	}

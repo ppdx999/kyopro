@@ -3,14 +3,16 @@ package cli
 import (
 	"bytes"
 	"fmt"
+
+	"github.com/ppdx999/kyopro/internal/domain/service/user"
 )
 
 type Dispatcher struct {
 	cmds      map[string]Cmd
-	msgSender MsgSender
+	msgSender user.MsgSender
 }
 
-func NewDispatcher(msgSender MsgSender) *Dispatcher {
+func NewDispatcher(msgSender user.MsgSender) *Dispatcher {
 	return &Dispatcher{
 		cmds:      make(map[string]Cmd),
 		msgSender: msgSender,

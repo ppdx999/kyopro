@@ -5,15 +5,16 @@ import (
 	"fmt"
 
 	"github.com/ppdx999/kyopro/internal/application/service/downlaod"
+	"github.com/ppdx999/kyopro/internal/domain/service/user"
 	"github.com/ppdx999/kyopro/internal/presentation/cli"
 )
 
 type DownloadCmd struct {
 	s downlaod.DownloadService
-	m cli.MsgSender
+	m user.MsgSender
 }
 
-func NewDownloadCmd(s downlaod.DownloadService, m cli.MsgSender) *DownloadCmd {
+func NewDownloadCmd(s downlaod.DownloadService, m user.MsgSender) *DownloadCmd {
 	return &DownloadCmd{
 		s: s,
 		m: m,

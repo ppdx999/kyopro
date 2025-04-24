@@ -5,15 +5,16 @@ import (
 	"fmt"
 
 	"github.com/ppdx999/kyopro/internal/application/service/login"
+	"github.com/ppdx999/kyopro/internal/domain/service/user"
 	"github.com/ppdx999/kyopro/internal/presentation/cli"
 )
 
 type LoginCmd struct {
 	srvc      login.LoginService
-	msgSender cli.MsgSender
+	msgSender user.MsgSender
 }
 
-func NewLoginCmd(srvc login.LoginService, msgSender cli.MsgSender) *LoginCmd {
+func NewLoginCmd(srvc login.LoginService, msgSender user.MsgSender) *LoginCmd {
 	return &LoginCmd{
 		srvc:      srvc,
 		msgSender: msgSender,
