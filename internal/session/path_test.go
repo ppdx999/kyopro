@@ -5,16 +5,8 @@ import (
 	"testing"
 
 	"github.com/ppdx999/kyopro/internal/session"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockHome struct {
-	home string
-	err  error
-}
-
-func (m *MockHome) Home() (string, error) {
-	return m.home, m.err
-}
 
 func TestSessionPath(t *testing.T) {
 	tests := []struct {
@@ -38,9 +30,9 @@ func TestSessionPath(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockHome := &MockHome{
-				home: tt.home,
-				err:  tt.homeErr,
+			mockHome := &testutil.MockHome{
+				HomeDir: tt.home,
+				Err:     tt.homeErr,
 			}
 			s := session.NewSessionPath(mockHome)
 

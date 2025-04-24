@@ -7,19 +7,8 @@ import (
 
 	"github.com/ppdx999/kyopro/internal/model"
 	"github.com/ppdx999/kyopro/internal/testcase"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockGetWd struct {
-	wd  string
-	err error
-}
-
-func (m *MockGetWd) GetWd() (string, error) {
-	if m.err != nil {
-		return "", m.err
-	}
-	return m.wd, nil
-}
 
 type MockDirMaker struct {
 	makedDirs []string
@@ -98,12 +87,12 @@ func TestSaveTestCase(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockGetWd := &MockGetWd{
-				wd:  tt.getWd,
-				err: tt.getWdErr,
+			mockGetWd := &testutil.MockGetWd{
+				Wd:  tt.getWd,
+				Err: tt.getWdErr,
 			}
-			mockDirMaker := &MockDirMaker{
-				err: tt.makePublicDirErr,
+			mockDirMaker := &testutil.MockMakePublicDir{
+				Errs: []error{tt.makePublicDirErr},
 			}
 			mockPublicFileWriter := &MockPublicFileWriter{
 				writtenFiles: make(map[string][]byte),

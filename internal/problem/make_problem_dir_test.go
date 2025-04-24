@@ -2,26 +2,12 @@ package problem_test
 
 import (
 	"errors"
-	"reflect"
 	"testing"
 
 	"github.com/ppdx999/kyopro/internal/model"
 	"github.com/ppdx999/kyopro/internal/problem"
 	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockDirMaker struct {
-	makedDirs []string
-	err       error
-}
-
-func (m *MockDirMaker) MakePublicDir(dir string) error {
-	if m.err != nil {
-		return m.err
-	}
-	m.makedDirs = append(m.makedDirs, dir)
-	return nil
-}
 
 func TestMakeProblemDir(t *testing.T) {
 	tests := []struct {
@@ -64,9 +50,8 @@ func TestMakeProblemDir(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dirMaker := &MockDirMaker{
-				makedDirs: []string{},
-				err:       tt.makePublicDirErr,
+			dirMaker := &testutil.MockMakePublicDir{
+				Errs: []error{tt.makePublicDirErr},
 			}
 			getWd := &testutil.MockGetWd{
 				Wd:  tt.wd,
@@ -81,9 +66,10 @@ func TestMakeProblemDir(t *testing.T) {
 				return
 			}
 
-			if !reflect.DeepEqual(dirMaker.makedDirs, tt.createdDirs) {
-				t.Errorf("MakeProblemDir() createdDirs = %v, want %v", dirMaker.makedDirs, tt.createdDirs)
-				return
+			for _, dir := range tt.createdDirs {
+				if !dirMaker.CreatedDirs[dir] {
+					t.Errorf("MakeProblemDir() did not create directory %s", dir)
+				}
 			}
 		})
 	}

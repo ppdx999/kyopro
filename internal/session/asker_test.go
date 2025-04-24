@@ -6,16 +6,8 @@ import (
 
 	"github.com/ppdx999/kyopro/internal/model"
 	"github.com/ppdx999/kyopro/internal/session"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockUserInput struct {
-	input string
-	err   error
-}
-
-func (m *MockUserInput) UserInput() (string, error) {
-	return m.input, m.err
-}
 
 func TestSessionAsker(t *testing.T) {
 	tests := []struct {
@@ -39,9 +31,9 @@ func TestSessionAsker(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockUserInput := &MockUserInput{
-				input: tt.userInput,
-				err:   tt.userInputErr,
+			mockUserInput := &testutil.MockUserInput{
+				Input: tt.userInput,
+				Err:   tt.userInputErr,
 			}
 			s := session.NewSessionAskerImpl(mockUserInput)
 

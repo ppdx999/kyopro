@@ -6,26 +6,8 @@ import (
 
 	"github.com/ppdx999/kyopro/internal/model"
 	"github.com/ppdx999/kyopro/internal/session"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockReadSecretFile struct {
-	calledWithPath string
-	data           []byte
-	err            error
-}
-
-func (m *MockReadSecretFile) ReadSecretFile(path string) ([]byte, error) {
-	m.calledWithPath = path
-	return m.data, m.err
-}
-
-type MockExistFile struct {
-	exist bool
-}
-
-func (m *MockExistFile) ExistFile(path string) bool {
-	return m.exist
-}
 
 func TestSessionLoader(t *testing.T) {
 	tests := []struct {
@@ -79,12 +61,12 @@ func TestSessionLoader(t *testing.T) {
 				path: tt.sessionPath,
 				err:  tt.sessionPathErr,
 			}
-			mockReadSecretFile := &MockReadSecretFile{
-				data: tt.readSecretFile,
-				err:  tt.readSecretFileErr,
+			mockReadSecretFile := &testutil.MockReadSecretFile{
+				Datas: [][]byte{tt.readSecretFile},
+				Errs:  []error{tt.readSecretFileErr},
 			}
-			mockExistFile := &MockExistFile{
-				exist: tt.existFile,
+			mockExistFile := &testutil.MockExistFile{
+				Exist: tt.existFile,
 			}
 
 			s := session.NewSessionLoaderImpl(

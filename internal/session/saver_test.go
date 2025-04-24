@@ -1,35 +1,15 @@
 package session_test
 
 import (
+	"bytes"
 	"errors"
 	"path/filepath"
 	"testing"
 
 	"github.com/ppdx999/kyopro/internal/model"
 	"github.com/ppdx999/kyopro/internal/session"
+	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-type MockMakePublicDir struct {
-	calledWithPath string
-	err            error
-}
-
-func (m *MockMakePublicDir) MakePublicDir(path string) error {
-	m.calledWithPath = path
-	return m.err
-}
-
-type MockWriteSecretFile struct {
-	calledWithPath string
-	calledWithData []byte
-	err            error
-}
-
-func (m *MockWriteSecretFile) WriteSecretFile(path string, data []byte) error {
-	m.calledWithPath = path
-	m.calledWithData = data
-	return m.err
-}
 
 func TestSessionSaver(t *testing.T) {
 	tests := []struct {
@@ -81,11 +61,11 @@ func TestSessionSaver(t *testing.T) {
 				path: tt.sessionPath,
 				err:  tt.sessionPathErr,
 			}
-			mockMakePublicDir := &MockMakePublicDir{
-				err: tt.makePublicDirErr,
+			mockMakePublicDir := &testutil.MockMakePublicDir{
+				Errs: []error{tt.makePublicDirErr},
 			}
-			mockWriteSecretFile := &MockWriteSecretFile{
-				err: tt.writeSecretFileErr,
+			mockWriteSecretFile := &testutil.MockWriteSecretFile{
+				Errs: []error{tt.writeSecretFileErr},
 			}
 
 			s := session.NewSessionSaverImpl(
@@ -105,16 +85,13 @@ func TestSessionSaver(t *testing.T) {
 			if !tt.wantErr {
 				// Check MakePublicDir call
 				expectedDir := filepath.Dir(tt.sessionPath)
-				if mockMakePublicDir.calledWithPath != expectedDir {
-					t.Errorf("MakePublicDir called with path = %q, want %q", mockMakePublicDir.calledWithPath, expectedDir)
+				if !mockMakePublicDir.CreatedDirs[expectedDir] {
+					t.Errorf("MakePublicDir not called with path = %q", expectedDir)
 				}
 
 				// Check WriteSecretFile call
-				if mockWriteSecretFile.calledWithPath != tt.sessionPath {
-					t.Errorf("WriteSecretFile called with path = %q, want %q", mockWriteSecretFile.calledWithPath, tt.sessionPath)
-				}
-				if string(mockWriteSecretFile.calledWithData) != string(tt.inputSession) {
-					t.Errorf("WriteSecretFile called with data = %q, want %q", string(mockWriteSecretFile.calledWithData), string(tt.inputSession))
+				if !bytes.Equal(mockWriteSecretFile.CreatedFiles[tt.sessionPath], []byte(tt.inputSession)) {
+					t.Errorf("WriteSecretFile not called with data = %q", tt.inputSession)
 				}
 			}
 		})
