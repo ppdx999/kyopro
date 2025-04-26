@@ -4,70 +4,104 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/ppdx999/kyopro/internal/domain/model"
 	"github.com/ppdx999/kyopro/internal/domain/service/problem"
-	"github.com/ppdx999/kyopro/internal/testutil"
 )
 
 func TestMakeProblemDir(t *testing.T) {
-	tests := []struct {
-		name             string
-		contest          model.ContestId
-		problem          model.ProblemId
-		wd               string
+	type args struct {
+		contest model.ContestId
+		problem model.ProblemId
+	}
+	type mock struct {
+		getWd            string
 		getWdErr         error
 		makePublicDirErr error
-		wantErr          bool
-		createdDirs      []string
+	}
+	type want struct {
+		createdDirs []string
+		err         bool
+	}
+	tests := []struct {
+		name string
+		args *args
+		mock *mock
+		want *want
 	}{
 		{
-			name:    "正常系",
-			contest: model.ContestId("abc123"),
-			problem: model.ProblemId("1"),
-			wd:      "/path/to/workspace",
-			createdDirs: []string{
-				"/path/to/workspace/abc123/1",
+			name: "正常系",
+			args: &args{
+				contest: model.ContestId("abc123"),
+				problem: model.ProblemId("1"),
+			},
+			mock: &mock{
+				getWd: "/path/to/workspace",
+			},
+			want: &want{
+				createdDirs: []string{
+					"/path/to/workspace/abc123/1",
+				},
 			},
 		},
 		{
-			name:             "MakePublicDirエラー",
-			contest:          model.ContestId("abc123"),
-			problem:          model.ProblemId("1"),
-			wd:               "/path/to/workspace",
-			makePublicDirErr: errors.New("make public dir error"),
-			createdDirs:      []string{},
-			wantErr:          true,
+			name: "MakePublicDirエラー",
+			args: &args{
+				contest: model.ContestId("abc123"),
+				problem: model.ProblemId("1"),
+			},
+			mock: &mock{
+				getWd:            "/path/to/workspace",
+				makePublicDirErr: errors.New("make public dir error"),
+			},
+			want: &want{err: true},
 		},
 		{
-			name:        "GetWdエラー",
-			contest:     model.ContestId("abc123"),
-			problem:     model.ProblemId("1"),
-			getWdErr:    errors.New("get wd error"),
-			createdDirs: []string{},
-			wantErr:     true,
+			name: "GetWdエラー",
+			args: &args{
+				contest: model.ContestId("abc123"),
+				problem: model.ProblemId("1"),
+			},
+			mock: &mock{
+				getWdErr: errors.New("get wd error"),
+			},
+			want: &want{err: true},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dirMaker := &testutil.MockMakePublicDir{
-				Errs: []error{tt.makePublicDirErr},
-			}
-			getWd := &testutil.MockGetWd{
-				Wd:  tt.wd,
-				Err: tt.getWdErr,
-			}
+			// Arrange
+			var gotDirs map[string]bool
+
+			mockCtrl := gomock.NewController(t)
+			defer mockCtrl.Finish()
+			getWd := NewMockGetWd(mockCtrl)
+			getWd.EXPECT().GetWd().Return(tt.mock.getWd, tt.mock.getWdErr)
+			dirMaker := NewMockPublicDirMaker(mockCtrl)
+			dirMaker.
+				EXPECT().
+				MakePublicDir(gomock.Any()).
+				AnyTimes().
+				Do(func(path string) { gotDirs[path] = true }).
+				Return(tt.mock.makePublicDirErr)
 
 			m := problem.NewProblemDirMakerImpl(getWd, dirMaker)
 
-			err := m.MakeProblemDir(tt.contest, tt.problem)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("MakeProblemDir() error = %v, wantErr %v", err, tt.wantErr)
+			// Act
+			err := m.MakeProblemDir(tt.args.contest, tt.args.problem)
+
+			// Asesrt
+			if tt.want.err {
+				if err == nil {
+					t.Error("MakeProblemDir() error is expected but got nil")
+					return
+				}
 				return
 			}
 
-			for _, dir := range tt.createdDirs {
-				if !dirMaker.CreatedDirs[dir] {
+			for _, dir := range tt.want.createdDirs {
+				if !gotDirs[dir] {
 					t.Errorf("MakeProblemDir() did not create directory %s", dir)
 				}
 			}
