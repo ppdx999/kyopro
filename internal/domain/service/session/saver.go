@@ -6,10 +6,6 @@ import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
 )
 
-type SessionSaver interface {
-	SaveSession(model.SessionSecret) error
-}
-
 type SessionSaverImpl struct {
 	sessionPath     SessionPath
 	makePublicDir   MakePublicDir

@@ -14,36 +14,27 @@ func TestLoadCurrentProblem(t *testing.T) {
 		getWd    string
 		getWdErr error
 	}
-	type want struct {
-		problem *model.Problem
-		err     bool
-	}
 	tests := []struct {
 		name string
 		mock *mock
-		want *want
+		want *model.Problem
 	}{
 		{
 			name: "正常系",
 			mock: &mock{getWd: "/home/atcoder/contest_A/problem_B"},
-			want: &want{
-				problem: &model.Problem{ID: "problem_B", Contest: &model.Contest{ID: "contest_A"}},
-			},
+			want: &model.Problem{ID: "problem_B", Contest: &model.Contest{ID: "contest_A"}},
 		},
 		{
 			name: "ルートディレクトリで実行",
 			mock: &mock{getWd: "/"},
-			want: &want{err: true},
 		},
 		{
 			name: "問題IDが空",
 			mock: &mock{getWd: "/contest_A"},
-			want: &want{err: true},
 		},
 		{
 			name: "GetWdエラー",
 			mock: &mock{getWdErr: errors.New("get wd error")},
-			want: &want{err: true},
 		},
 	}
 	for _, tt := range tests {
@@ -59,7 +50,7 @@ func TestLoadCurrentProblem(t *testing.T) {
 			got, err := l.LoadCurrentProblem()
 
 			// Assert
-			if tt.want.err {
+			if tt.want == nil {
 				if err == nil {
 					t.Error("CurrentProblemLoaderImpl.LoadCurrentProblem() error is expected but got nil")
 					return
@@ -67,12 +58,12 @@ func TestLoadCurrentProblem(t *testing.T) {
 				return
 			}
 
-			if got.ID != tt.want.problem.ID {
-				t.Errorf("CurrentProblemLoaderImpl.LoadCurrentProblem() problemId= %v, want %v", got.ID, tt.want.problem.ID)
+			if got.ID != tt.want.ID {
+				t.Errorf("CurrentProblemLoaderImpl.LoadCurrentProblem() problemId= %v, want %v", got.ID, tt.want.ID)
 				return
 			}
-			if got.Contest.ID != tt.want.problem.Contest.ID {
-				t.Errorf("LoadCurrentProblem() contestId= %v, want %v", got.Contest.ID, tt.want.problem.Contest.ID)
+			if got.Contest.ID != tt.want.Contest.ID {
+				t.Errorf("LoadCurrentProblem() contestId= %v, want %v", got.Contest.ID, tt.want.Contest.ID)
 				return
 			}
 		})

@@ -11,3 +11,7 @@ type TestCasesGetter interface {
 		error,
 	)
 }
+
+type TestCaseSaver interface {
+	SaveTestCase(t *model.TestCase) error
+}

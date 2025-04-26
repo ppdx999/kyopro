@@ -7,10 +7,6 @@ import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
 )
 
-type CurrentProblemLoader interface {
-	LoadCurrentProblem() (*model.Problem, error)
-}
-
 type CurrentProblemLoaderImpl struct {
 	wd GetWd
 }
