@@ -144,7 +144,7 @@ func TestSaveTestCase(t *testing.T) {
 			defer mockCtrl.Finish()
 			mock := tt.mock(mockCtrl)
 
-			saver := testcase.NewTestCaseFsSaver(
+			saver := testcase.NewTestCaseSaver(
 				mock.getWd,
 				mock.publicDirMaker,
 				mock.publicFileWriter,

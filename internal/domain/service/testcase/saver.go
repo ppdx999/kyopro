@@ -7,21 +7,13 @@ import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
 )
 
-type TestCaseFsSaver struct {
+type testCaseSaver struct {
 	wd         GetWd
 	dirMaker   PublicDirMaker
 	fileWriter PublicFileWriter
 }
 
-func NewTestCaseFsSaver(wd GetWd, dirMaker PublicDirMaker, fileWriter PublicFileWriter) *TestCaseFsSaver {
-	return &TestCaseFsSaver{
-		wd:         wd,
-		dirMaker:   dirMaker,
-		fileWriter: fileWriter,
-	}
-}
-
-func (t *TestCaseFsSaver) SaveTestCase(ts *model.TestCase) error {
+func (t *testCaseSaver) SaveTestCase(ts *model.TestCase) error {
 	cwd, err := t.wd.GetWd()
 	if err != nil {
 		return err

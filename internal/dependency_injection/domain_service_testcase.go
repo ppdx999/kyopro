@@ -17,7 +17,7 @@ func TestCaseSaver() testcase.TestCaseSaver {
 		return OperationSystem()
 	}
 
-	return testcase.NewTestCaseFsSaver(
+	return testcase.NewTestCaseSaver(
 		WorkspaceGetter(),
 		PublicDirMaker(),
 		PublicFileWriter(),

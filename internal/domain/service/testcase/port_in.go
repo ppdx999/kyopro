@@ -15,3 +15,11 @@ type TestCasesGetter interface {
 type TestCaseSaver interface {
 	SaveTestCase(t *model.TestCase) error
 }
+
+func NewTestCaseSaver(wd GetWd, dirMaker PublicDirMaker, fileWriter PublicFileWriter) TestCaseSaver {
+	return &testCaseSaver{
+		wd:         wd,
+		dirMaker:   dirMaker,
+		fileWriter: fileWriter,
+	}
+}
