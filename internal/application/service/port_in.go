@@ -13,3 +13,7 @@ type Initer interface {
 type Loginer interface {
 	Login() error
 }
+
+type Tester interface {
+	Test() error
+}
