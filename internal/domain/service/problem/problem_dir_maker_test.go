@@ -15,19 +15,14 @@ func TestMakeProblemDir(t *testing.T) {
 		problem model.ProblemId
 	}
 	type mock struct {
-		getWd            string
-		getWdErr         error
-		makePublicDirErr error
-	}
-	type want struct {
-		createdDirs []string
-		err         bool
+		getWd         *MockGetWd
+		makePublicDir *MockPublicDirMaker
 	}
 	tests := []struct {
-		name string
-		args *args
-		mock *mock
-		want *want
+		name    string
+		args    *args
+		mock    func(c *gomock.Controller) *mock
+		wantErr bool
 	}{
 		{
 			name: "正常系",
@@ -35,13 +30,19 @@ func TestMakeProblemDir(t *testing.T) {
 				contest: model.ContestId("abc123"),
 				problem: model.ProblemId("1"),
 			},
-			mock: &mock{
-				getWd: "/path/to/workspace",
-			},
-			want: &want{
-				createdDirs: []string{
-					"/path/to/workspace/abc123/1",
-				},
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					getWd: func() *MockGetWd {
+						m := NewMockGetWd(c)
+						m.EXPECT().GetWd().Return("/path/to/workspace", nil)
+						return m
+					}(),
+					makePublicDir: func() *MockPublicDirMaker {
+						m := NewMockPublicDirMaker(c)
+						m.EXPECT().MakePublicDir("/path/to/workspace/abc123/1").Return(nil)
+						return m
+					}(),
+				}
 			},
 		},
 		{
@@ -50,11 +51,23 @@ func TestMakeProblemDir(t *testing.T) {
 				contest: model.ContestId("abc123"),
 				problem: model.ProblemId("1"),
 			},
-			mock: &mock{
-				getWd:            "/path/to/workspace",
-				makePublicDirErr: errors.New("make public dir error"),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					getWd: func() *MockGetWd {
+						m := NewMockGetWd(c)
+						m.EXPECT().GetWd().Return("/path/to/workspace", nil)
+						return m
+					}(),
+					makePublicDir: func() *MockPublicDirMaker {
+						m := NewMockPublicDirMaker(c)
+						m.EXPECT().
+							MakePublicDir("/path/to/workspace/abc123/1").
+							Return(errors.New("make public dir error"))
+						return m
+					}(),
+				}
 			},
-			want: &want{err: true},
+			wantErr: true,
 		},
 		{
 			name: "GetWdエラー",
@@ -62,48 +75,41 @@ func TestMakeProblemDir(t *testing.T) {
 				contest: model.ContestId("abc123"),
 				problem: model.ProblemId("1"),
 			},
-			mock: &mock{
-				getWdErr: errors.New("get wd error"),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					getWd: func() *MockGetWd {
+						m := NewMockGetWd(c)
+						m.EXPECT().GetWd().Return("", errors.New("get wd error"))
+						return m
+					}(),
+					makePublicDir: func() *MockPublicDirMaker {
+						return NewMockPublicDirMaker(c)
+					}(),
+				}
 			},
-			want: &want{err: true},
+			wantErr: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Arrange
-			var gotDirs map[string]bool
-
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
-			getWd := NewMockGetWd(mockCtrl)
-			getWd.EXPECT().GetWd().Return(tt.mock.getWd, tt.mock.getWdErr)
-			dirMaker := NewMockPublicDirMaker(mockCtrl)
-			dirMaker.
-				EXPECT().
-				MakePublicDir(gomock.Any()).
-				AnyTimes().
-				Do(func(path string) { gotDirs[path] = true }).
-				Return(tt.mock.makePublicDirErr)
+			mock := tt.mock(mockCtrl)
 
-			m := problem.NewProblemDirMakerImpl(getWd, dirMaker)
+			m := problem.NewProblemDirMaker(
+				mock.getWd,
+				mock.makePublicDir,
+			)
 
 			// Act
 			err := m.MakeProblemDir(tt.args.contest, tt.args.problem)
 
 			// Asesrt
-			if tt.want.err {
-				if err == nil {
-					t.Error("MakeProblemDir() error is expected but got nil")
-					return
-				}
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ProblemDirMakerImpl.MakeProblemDir() error = %v, wantErr %v", err, tt.wantErr)
 				return
-			}
-
-			for _, dir := range tt.want.createdDirs {
-				if !gotDirs[dir] {
-					t.Errorf("MakeProblemDir() did not create directory %s", dir)
-				}
 			}
 		})
 	}

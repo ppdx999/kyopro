@@ -14,7 +14,7 @@ func ProblemDirMaker() problem.ProblemDirMaker {
 		return FileSystem()
 	}
 
-	return problem.NewProblemDirMakerImpl(
+	return problem.NewProblemDirMaker(
 		GetWd(),
 		PublicDirMaker(),
 	)
@@ -25,7 +25,7 @@ func CurrentProblemLoader() problem.CurrentProblemLoader {
 		return FileSystem()
 	}
 
-	return problem.NewCurrentProblemLoaderImpl(
+	return problem.NewCurrentProblemLoader(
 		GetWd(),
 	)
 }

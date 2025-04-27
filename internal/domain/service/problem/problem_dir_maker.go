@@ -6,19 +6,12 @@ import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
 )
 
-type ProblemDirMakerImpl struct {
+type problemDirMaker struct {
 	wd       GetWd
 	dirMaker PublicDirMaker
 }
 
-func NewProblemDirMakerImpl(
-	wd GetWd,
-	dirMaker PublicDirMaker,
-) *ProblemDirMakerImpl {
-	return &ProblemDirMakerImpl{wd: wd, dirMaker: dirMaker}
-}
-
-func (s *ProblemDirMakerImpl) MakeProblemDir(c model.ContestId, p model.ProblemId) error {
+func (s *problemDirMaker) MakeProblemDir(c model.ContestId, p model.ProblemId) error {
 	cwd, err := s.wd.GetWd()
 	if err != nil {
 		return err

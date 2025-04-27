@@ -7,15 +7,11 @@ import (
 	"github.com/ppdx999/kyopro/internal/domain/model"
 )
 
-type CurrentProblemLoaderImpl struct {
+type currentProblemLoader struct {
 	wd GetWd
 }
 
-func NewCurrentProblemLoaderImpl(wd GetWd) *CurrentProblemLoaderImpl {
-	return &CurrentProblemLoaderImpl{wd: wd}
-}
-
-func (l *CurrentProblemLoaderImpl) LoadCurrentProblem() (*model.Problem, error) {
+func (l *currentProblemLoader) LoadCurrentProblem() (*model.Problem, error) {
 	cwd, err := l.wd.GetWd()
 	if err != nil {
 		return nil, err

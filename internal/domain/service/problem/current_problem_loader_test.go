@@ -11,40 +11,74 @@ import (
 
 func TestLoadCurrentProblem(t *testing.T) {
 	type mock struct {
-		getWd    string
-		getWdErr error
+		getWd *MockGetWd
 	}
 	tests := []struct {
 		name string
-		mock *mock
+		mock func(c *gomock.Controller) *mock
 		want *model.Problem
 	}{
 		{
 			name: "正常系",
-			mock: &mock{getWd: "/home/atcoder/contest_A/problem_B"},
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					getWd: func() *MockGetWd {
+						m := NewMockGetWd(c)
+						m.EXPECT().GetWd().Return("/home/atcoder/contest_A/problem_B", nil)
+						return m
+					}(),
+				}
+			},
 			want: &model.Problem{ID: "problem_B", Contest: &model.Contest{ID: "contest_A"}},
 		},
 		{
 			name: "ルートディレクトリで実行",
-			mock: &mock{getWd: "/"},
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					getWd: func() *MockGetWd {
+						m := NewMockGetWd(c)
+						m.EXPECT().GetWd().Return("/", nil)
+						return m
+					}(),
+				}
+			},
+			want: nil,
 		},
 		{
 			name: "問題IDが空",
-			mock: &mock{getWd: "/contest_A"},
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					getWd: func() *MockGetWd {
+						m := NewMockGetWd(c)
+						m.EXPECT().GetWd().Return("/contest_A", nil)
+						return m
+					}(),
+				}
+			},
 		},
 		{
 			name: "GetWdエラー",
-			mock: &mock{getWdErr: errors.New("get wd error")},
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					getWd: func() *MockGetWd {
+						m := NewMockGetWd(c)
+						m.EXPECT().GetWd().Return("", errors.New("get wd error"))
+						return m
+					}(),
+				}
+			},
+			want: nil,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Arrange
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
-			getWd := NewMockGetWd(mockCtrl)
-			getWd.EXPECT().GetWd().Return(tt.mock.getWd, tt.mock.getWdErr)
-			l := problem.NewCurrentProblemLoaderImpl(getWd)
+			mock := tt.mock(mockCtrl)
+
+			l := problem.NewCurrentProblemLoader(mock.getWd)
 
 			// Act
 			got, err := l.LoadCurrentProblem()
