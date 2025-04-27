@@ -17,7 +17,7 @@ func SessionAsker() session.SessionAsker {
 		return UserInputFromConsole()
 	}
 
-	return session.NewSessionAskerImpl(UserInput())
+	return session.NewSessionAsker(UserInput())
 }
 
 func SessionLoader() session.SessionLoader {
@@ -29,7 +29,7 @@ func SessionLoader() session.SessionLoader {
 		return FileSystem()
 	}
 
-	return session.NewSessionLoaderImpl(
+	return session.NewSessionLoader(
 		SessionPath(),
 		ExitFile(),
 		ReadSecretFile(),
@@ -45,7 +45,7 @@ func SessionSaver() session.SessionSaver {
 		return FileSystem()
 	}
 
-	return session.NewSessionSaverImpl(
+	return session.NewSessionSaver(
 		SessionPath(),
 		MakePublicDir(),
 		WriteSecretFile(),

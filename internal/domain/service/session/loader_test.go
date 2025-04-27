@@ -12,55 +12,113 @@ import (
 
 func TestSessionLoader(t *testing.T) {
 	type mock struct {
-		sessionPath       string
-		sessionPathErr    error
-		existFile         bool
-		readSecretFile    []byte
-		readSecretFileErr error
+		sessionPath    *MockSessionPath
+		existFile      *MockExistFile
+		readSecretFile *MockReadSecretFile
 	}
 	tests := []struct {
 		name    string
-		mock    *mock
+		mock    func(c *gomock.Controller) *mock
 		want    model.SessionSecret
 		wantErr bool
 	}{
 		{
 			name: "正常系",
-			mock: &mock{
-				sessionPath:    "/home/user/.kyopro/session",
-				existFile:      true,
-				readSecretFile: []byte("mysecret"),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("/home/user/.kyopro/session", nil)
+						return m
+					}(),
+					existFile: func() *MockExistFile {
+						m := NewMockExistFile(c)
+						m.EXPECT().ExistFile("/home/user/.kyopro/session").Return(true)
+						return m
+					}(),
+					readSecretFile: func() *MockReadSecretFile {
+						m := NewMockReadSecretFile(c)
+						m.EXPECT().ReadSecretFile("/home/user/.kyopro/session").Return([]byte("mysecret"), nil)
+						return m
+					}(),
+				}
 			},
 			want: model.SessionSecret("mysecret"),
 		},
 		{
-			name:    "sessionPathがエラー",
-			mock:    &mock{sessionPathErr: errors.New("session path error")},
+			name: "sessionPathがエラー",
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("", errors.New("session path error"))
+						return m
+					}(),
+				}
+			},
 			wantErr: true,
 		},
 		{
 			name: "readSecretFileがエラー",
-			mock: &mock{
-				sessionPath:       "/home/user/.kyopro/session",
-				existFile:         true,
-				readSecretFileErr: errors.New("read file error"),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("/home/user/.kyopro/session", nil)
+						return m
+					}(),
+					existFile: func() *MockExistFile {
+						m := NewMockExistFile(c)
+						m.EXPECT().ExistFile("/home/user/.kyopro/session").Return(true)
+						return m
+					}(),
+					readSecretFile: func() *MockReadSecretFile {
+						m := NewMockReadSecretFile(c)
+						m.EXPECT().ReadSecretFile("/home/user/.kyopro/session").Return(nil, errors.New("read secret file error"))
+						return m
+					}(),
+				}
 			},
 			wantErr: true,
 		},
 		{
 			name: "sessionが空",
-			mock: &mock{
-				sessionPath:    "/home/user/.kyopro/session",
-				existFile:      true,
-				readSecretFile: []byte(""),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("/home/user/.kyopro/session", nil)
+						return m
+					}(),
+					existFile: func() *MockExistFile {
+						m := NewMockExistFile(c)
+						m.EXPECT().ExistFile("/home/user/.kyopro/session").Return(true)
+						return m
+					}(),
+					readSecretFile: func() *MockReadSecretFile {
+						m := NewMockReadSecretFile(c)
+						m.EXPECT().ReadSecretFile("/home/user/.kyopro/session").Return([]byte(""), nil)
+						return m
+					}(),
+				}
 			},
 			want: model.SessionSecret(""),
 		},
 		{
 			name: "sessionファイルが存在しない",
-			mock: &mock{
-				sessionPath: "/home/user/.kyopro/session",
-				existFile:   false,
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("/home/user/.kyopro/session", nil)
+						return m
+					}(),
+					existFile: func() *MockExistFile {
+						m := NewMockExistFile(c)
+						m.EXPECT().ExistFile("/home/user/.kyopro/session").Return(false)
+						return m
+					}(),
+				}
 			},
 			want: model.SessionSecret(""),
 		},
@@ -71,14 +129,13 @@ func TestSessionLoader(t *testing.T) {
 			// Arrange
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
-			sessionPath := NewMockSessionPath(mockCtrl)
-			sessionPath.EXPECT().SessionPath().Return(tt.mock.sessionPath, tt.mock.sessionPathErr)
-			existFile := NewMockExistFile(mockCtrl)
-			existFile.EXPECT().ExistFile(tt.mock.sessionPath).Return(tt.mock.existFile)
-			readSecretFile := NewMockReadSecretFile(mockCtrl)
-			readSecretFile.EXPECT().ReadSecretFile(tt.mock.sessionPath).Return(tt.mock.readSecretFile, tt.mock)
+			mock := tt.mock(mockCtrl)
 
-			s := session.NewSessionLoaderImpl(sessionPath, existFile, readSecretFile)
+			s := session.NewSessionLoader(
+				mock.sessionPath,
+				mock.existFile,
+				mock.readSecretFile,
+			)
 
 			// Act
 			got, err := s.LoadSession()

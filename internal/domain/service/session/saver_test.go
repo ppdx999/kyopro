@@ -14,55 +14,105 @@ func TestSessionSaver(t *testing.T) {
 		session model.SessionSecret
 	}
 	type mock struct {
-		sessionPath         string
-		sessionPathErr      error
-		makePublicDirArg    string
-		makePublicDirErr    error
-		writeSecretFilePath string
-		writeSecretFileData []byte
-		writeSecretFileErr  error
+		sessionPath     *MockSessionPath
+		makePublicDir   *MockMakePublicDir
+		writeSecretFile *MockWriteSecretFile
 	}
 	tests := []struct {
 		name    string
 		args    *args
-		mock    *mock
+		mock    func(c *gomock.Controller) *mock
 		wantErr bool
 	}{
 		{
 			name: "正常系",
 			args: &args{session: model.SessionSecret("mysecret")},
-			mock: &mock{
-				sessionPath:         "/home/user/.kyopro/session",
-				makePublicDirArg:    "/home/user/.kyopro",
-				writeSecretFilePath: "/home/user/.kyopro/session",
-				writeSecretFileData: []byte("mysecret"),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("/home/user/.kyopro/session", nil)
+						return m
+					}(),
+					makePublicDir: func() *MockMakePublicDir {
+						m := NewMockMakePublicDir(c)
+						m.EXPECT().MakePublicDir("/home/user/.kyopro").Return(nil)
+						return m
+					}(),
+					writeSecretFile: func() *MockWriteSecretFile {
+						m := NewMockWriteSecretFile(c)
+						m.EXPECT().WriteSecretFile("/home/user/.kyopro/session", []byte("mysecret")).Return(nil)
+						return m
+					}(),
+				}
 			},
 		},
 		{
-			name:    "SessionPathでエラー",
-			args:    &args{session: model.SessionSecret("mysecret")},
-			mock:    &mock{sessionPathErr: errors.New("session path error")},
+			name: "SessionPathでエラー",
+			args: &args{session: model.SessionSecret("mysecret")},
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("", errors.New("session path error"))
+						return m
+					}(),
+					makePublicDir: func() *MockMakePublicDir {
+						m := NewMockMakePublicDir(c)
+						return m
+					}(),
+					writeSecretFile: func() *MockWriteSecretFile {
+						m := NewMockWriteSecretFile(c)
+						return m
+					}(),
+				}
+			},
 			wantErr: true,
 		},
 		{
 			name: "MakePublicDirでエラー",
 			args: &args{session: model.SessionSecret("mysecret")},
-			mock: &mock{
-				sessionPath:      "/home/user/.kyopro/session",
-				makePublicDirArg: "/home/user/.kyopro",
-				makePublicDirErr: errors.New("make public dir error"),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("/home/user/.kyopro/session", nil)
+						return m
+					}(),
+					makePublicDir: func() *MockMakePublicDir {
+						m := NewMockMakePublicDir(c)
+						m.EXPECT().MakePublicDir("/home/user/.kyopro").Return(errors.New("make public dir error"))
+						return m
+					}(),
+					writeSecretFile: func() *MockWriteSecretFile {
+						m := NewMockWriteSecretFile(c)
+						return m
+					}(),
+				}
 			},
 			wantErr: true,
 		},
 		{
 			name: "WriteSecretFileでエラー",
 			args: &args{session: model.SessionSecret("mysecret")},
-			mock: &mock{
-				sessionPath:         "/home/user/.kyopro/session",
-				makePublicDirArg:    "/home/user/.kyopro",
-				writeSecretFilePath: "/home/user/.kyopro/session",
-				writeSecretFileData: []byte("mysecret"),
-				writeSecretFileErr:  errors.New("write secret file error"),
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					sessionPath: func() *MockSessionPath {
+						m := NewMockSessionPath(c)
+						m.EXPECT().SessionPath().Return("/home/user/.kyopro/session", nil)
+						return m
+					}(),
+					makePublicDir: func() *MockMakePublicDir {
+						m := NewMockMakePublicDir(c)
+						m.EXPECT().MakePublicDir("/home/user/.kyopro").Return(nil)
+						return m
+					}(),
+					writeSecretFile: func() *MockWriteSecretFile {
+						m := NewMockWriteSecretFile(c)
+						m.EXPECT().WriteSecretFile("/home/user/.kyopro/session", []byte("mysecret")).Return(errors.New("write secret file error"))
+						return m
+					}(),
+				}
 			},
 			wantErr: true,
 		},
@@ -73,29 +123,12 @@ func TestSessionSaver(t *testing.T) {
 			// Arrange
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
+			mock := tt.mock(mockCtrl)
 
-			mockSessionPath := NewMockSessionPath(mockCtrl)
-			mockSessionPath.
-				EXPECT().
-				SessionPath().
-				Return(tt.mock.sessionPath, tt.mock.sessionPathErr)
-
-			mockMakePublicDir := NewMockMakePublicDir(mockCtrl)
-			mockMakePublicDir.
-				EXPECT().
-				MakePublicDir(tt.mock.makePublicDirArg).
-				Return(tt.mock.makePublicDirErr)
-
-			mockWriteSecretFile := NewMockWriteSecretFile(mockCtrl)
-			mockWriteSecretFile.
-				EXPECT().
-				WriteSecretFile(tt.mock.writeSecretFilePath, tt.mock.writeSecretFileData).
-				Return(tt.mock.writeSecretFileErr)
-
-			s := session.NewSessionSaverImpl(
-				mockSessionPath,
-				mockMakePublicDir,
-				mockWriteSecretFile,
+			s := session.NewSessionSaver(
+				mock.sessionPath,
+				mock.makePublicDir,
+				mock.writeSecretFile,
 			)
 
 			// Act

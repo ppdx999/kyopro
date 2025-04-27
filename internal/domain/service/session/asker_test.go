@@ -7,27 +7,43 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/ppdx999/kyopro/internal/domain/model"
 	"github.com/ppdx999/kyopro/internal/domain/service/session"
+	user_mock "github.com/ppdx999/kyopro/internal/domain/service/user/mock"
 )
 
 func TestSessionAsker(t *testing.T) {
 	type mock struct {
-		userInput    string
-		userInputErr error
+		userInput *user_mock.MockUserInput
 	}
 	tests := []struct {
 		name    string
-		mock    *mock
+		mock    func(c *gomock.Controller) *mock
 		want    model.SessionSecret
 		wantErr bool
 	}{
 		{
 			name: "正常系",
-			mock: &mock{userInput: "test"},
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					userInput: func() *user_mock.MockUserInput {
+						m := user_mock.NewMockUserInput(c)
+						m.EXPECT().UserInput().Return("test", nil)
+						return m
+					}(),
+				}
+			},
 			want: model.SessionSecret("test"),
 		},
 		{
-			name:    "userinputでエラーが発生",
-			mock:    &mock{userInputErr: errors.New("input error")},
+			name: "userinputでエラーが発生",
+			mock: func(c *gomock.Controller) *mock {
+				return &mock{
+					userInput: func() *user_mock.MockUserInput {
+						m := user_mock.NewMockUserInput(c)
+						m.EXPECT().UserInput().Return("", errors.New("user input error"))
+						return m
+					}(),
+				}
+			},
 			wantErr: true,
 		},
 	}
@@ -37,9 +53,8 @@ func TestSessionAsker(t *testing.T) {
 			// Arrange
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
-			userInput := NewMockUserInput(mockCtrl)
-			userInput.EXPECT().UserInput().Return(tt.mock.userInput, tt.mock.userInputErr)
-			s := session.NewSessionAskerImpl(userInput)
+			mock := tt.mock(mockCtrl)
+			s := session.NewSessionAsker(mock.userInput)
 
 			// Act
 			got, err := s.AskSession()
