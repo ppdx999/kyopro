@@ -7,12 +7,11 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/ppdx999/kyopro/internal/domain/model"
 	"github.com/ppdx999/kyopro/internal/domain/service/session"
-	user_mock "github.com/ppdx999/kyopro/internal/domain/service/user/mock"
 )
 
 func TestSessionAsker(t *testing.T) {
 	type mock struct {
-		userInput *user_mock.MockUserInput
+		userInput *MockUserInput
 	}
 	tests := []struct {
 		name    string
@@ -24,8 +23,8 @@ func TestSessionAsker(t *testing.T) {
 			name: "正常系",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					userInput: func() *user_mock.MockUserInput {
-						m := user_mock.NewMockUserInput(c)
+					userInput: func() *MockUserInput {
+						m := NewMockUserInput(c)
 						m.EXPECT().UserInput().Return("test", nil)
 						return m
 					}(),
@@ -37,8 +36,8 @@ func TestSessionAsker(t *testing.T) {
 			name: "userinputでエラーが発生",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					userInput: func() *user_mock.MockUserInput {
-						m := user_mock.NewMockUserInput(c)
+					userInput: func() *MockUserInput {
+						m := NewMockUserInput(c)
 						m.EXPECT().UserInput().Return("", errors.New("user input error"))
 						return m
 					}(),

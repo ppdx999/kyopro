@@ -6,12 +6,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/ppdx999/kyopro/internal/domain/service/session"
-	user_mock "github.com/ppdx999/kyopro/internal/domain/service/user/mock"
 )
 
 func TestSessionPath(t *testing.T) {
 	type mock struct {
-		home *user_mock.MockHome
+		home *MockHome
 	}
 
 	tests := []struct {
@@ -24,8 +23,8 @@ func TestSessionPath(t *testing.T) {
 			name: "正常系",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					home: func() *user_mock.MockHome {
-						m := user_mock.NewMockHome(c)
+					home: func() *MockHome {
+						m := NewMockHome(c)
 						m.EXPECT().Home().Return("/home/user", nil)
 						return m
 					}(),
@@ -37,8 +36,8 @@ func TestSessionPath(t *testing.T) {
 			name: "homeでエラーが発生",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					home: func() *user_mock.MockHome {
-						m := user_mock.NewMockHome(c)
+					home: func() *MockHome {
+						m := NewMockHome(c)
 						m.EXPECT().Home().Return("", errors.New("home error"))
 						return m
 					}(),
