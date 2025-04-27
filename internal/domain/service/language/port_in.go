@@ -6,7 +6,7 @@ type LanguageDetector interface {
 	DetectLanguage() (*model.Language, error)
 }
 
-func NewDetector(
+func NewLanguageDetector(
 	allLanguagesFetcher AllLanguagesFetcher,
 	fileExister FileExister,
 ) LanguageDetector {
@@ -20,6 +20,6 @@ type LanguageTestCaseRunner interface {
 	Run(l *model.Language, tc *model.TestCase) ([]byte, []byte, error)
 }
 
-func NewTestCaseRunner() LanguageTestCaseRunner {
+func NewLanguageTestCaseRunner() LanguageTestCaseRunner {
 	return &testcaseRunner{}
 }

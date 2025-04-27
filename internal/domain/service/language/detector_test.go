@@ -51,7 +51,7 @@ func Test_detector_DetectLanguage(t *testing.T) {
 			defer ctrl.Finish()
 			mock := tt.mock(ctrl)
 
-			d := language.NewDetector(
+			d := language.NewLanguageDetector(
 				mock.allLanguagesFetcher,
 				mock.fileExister,
 			)

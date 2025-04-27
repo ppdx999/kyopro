@@ -59,7 +59,7 @@ func Test_testcaseRunner_Run(t *testing.T) {
 			defer ctrl.Finish()
 			args := tt.args(ctrl)
 
-			r := language.NewTestCaseRunner()
+			r := language.NewLanguageTestCaseRunner()
 
 			// Act
 			got, got2, err := r.Run(args.l, args.t)
