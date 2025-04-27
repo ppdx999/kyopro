@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/ppdx999/kyopro/internal/domain/model"
 	"github.com/ppdx999/kyopro/internal/domain/service/language"
 	"github.com/ppdx999/kyopro/internal/domain/service/testcase"
 	"github.com/ppdx999/kyopro/internal/domain/service/user"
 )
 
 type tester struct {
-	pipeline               *model.Pipeline
+	userPipeline           user.Pipeline
 	testCasesCurrentLoader testcase.TestCaseCurrentLoader
 	languageDetector       language.LanguageDetector
 	languageTestcaseRunner language.LanguageTestCaseRunner
@@ -19,14 +18,14 @@ type tester struct {
 }
 
 func NewTester(
-	pipeline *model.Pipeline,
+	userPipeline user.Pipeline,
 	testCasesCurrentLoader testcase.TestCaseCurrentLoader,
 	languageDetector language.LanguageDetector,
 	languageTestcaseRunner language.LanguageTestCaseRunner,
 	msgSender user.MsgSender,
 ) *tester {
 	return &tester{
-		pipeline:               pipeline,
+		userPipeline:           userPipeline,
 		testCasesCurrentLoader: testCasesCurrentLoader,
 		languageDetector:       languageDetector,
 		languageTestcaseRunner: languageTestcaseRunner,
@@ -44,7 +43,9 @@ func (t *tester) Test() error {
 		return err
 	}
 
-	if err := lang.Build(t.pipeline); err != nil {
+	pipeline := t.userPipeline.Pipeline()
+	pipeline.Inflow = bytes.NewReader(nil)
+	if err := lang.Build(pipeline); err != nil {
 		return err
 	}
 
@@ -71,7 +72,9 @@ func (t *tester) Test() error {
 		}
 	}
 
-	if err := lang.Clean(t.pipeline); err != nil {
+	pipeline = t.userPipeline.Pipeline()
+	pipeline.Inflow = bytes.NewReader(nil)
+	if err := lang.Clean(pipeline); err != nil {
 		return err
 	}
 
