@@ -2,48 +2,16 @@ package atcoder_test
 
 import (
 	"errors"
+	"io"
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/ppdx999/kyopro/internal/domain/model"
 	"github.com/ppdx999/kyopro/internal/infrastructure/external_service/atcoder"
-	"github.com/ppdx999/kyopro/internal/testutil"
 )
-
-func TestExtractProblemIds(t *testing.T) {
-	tests := []struct {
-		name string
-		html string
-		want []model.ProblemId
-	}{
-		{
-			name: "correct case",
-			html: `<a href="/contests/abc100/tasks/abc100_a">Problem A</a>
-		 		   <a href="/contests/abc100/tasks/abc100_b">Problem B</a>
-		 		   <a href="/contests/abc100/tasks/abc100_c">Problem C</a>`,
-			want: []model.ProblemId{"a", "b", "c"},
-		},
-		{
-			name: "no problem found",
-			html: `<html><body></body></html>`,
-			want: nil,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			atcoder := atcoder.NewAtcoder(&testutil.MockRequester{})
-
-			got := atcoder.ExtractProblemIds(tt.html)
-
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ExtractProblemIds() = %v, want %v", got, tt.want)
-				return
-			}
-		})
-	}
-}
 
 func TestGetProblemIds(t *testing.T) {
 	tests := []struct {
@@ -55,10 +23,17 @@ func TestGetProblemIds(t *testing.T) {
 		wantErr       bool
 	}{
 		{
-			name:   "correct case",
-			html:   `<a href="/contests/abc100/tasks/abc100_a">Problem A</a>`,
+			name: "correct case",
+			html: `<a href="/contests/abc100/tasks/abc100_a">Problem A</a>
+			<a href="/contests/abc100/tasks/abc100_b">Problem B</a>
+			<a href="/contests/abc100/tasks/abc100_c">Problem C</a>`,
 			reqErr: nil,
-			want:   []model.ProblemId{"a"},
+			want:   []model.ProblemId{"a", "b", "c"},
+		},
+		{
+			name: "no problem found",
+			html: `<html><body></body></html>`,
+			want: nil,
 		},
 		{
 			name:    "request error",
@@ -87,12 +62,22 @@ func TestGetProblemIds(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockRequester := testutil.MockRequester{
-				ResponseStatusCode: tt.resStatusCode,
-				ResponseBody:       tt.html,
-				ResponseErr:        tt.reqErr,
-			}
-			atcoder := atcoder.NewAtcoder(&mockRequester)
+			var requestUrl string
+			mockCtrl := gomock.NewController(t)
+			defer mockCtrl.Finish()
+
+			mockRequester := NewMockRequester(mockCtrl)
+			mockRequester.EXPECT().Request(gomock.Any()).
+				DoAndReturn(func(req *http.Request) (*http.Response, error) {
+					requestUrl = req.URL.String()
+					return &http.Response{
+						StatusCode: tt.resStatusCode,
+						Body:       io.NopCloser(strings.NewReader(tt.html)),
+					}, tt.reqErr
+				},
+				)
+
+			atcoder := atcoder.NewAtcoder(mockRequester)
 
 			got, err := atcoder.GetProblemIds("abc100")
 
@@ -106,8 +91,8 @@ func TestGetProblemIds(t *testing.T) {
 				return
 			}
 
-			if !reflect.DeepEqual(mockRequester.CalledWith.URL.String(), "https://atcoder.jp/contests/abc100/tasks") {
-				t.Errorf("GetProblemIds() = %v, want %v", mockRequester.CalledWith.URL.String(), "https://atcoder.jp/contests/abc100/tasks")
+			if !reflect.DeepEqual(requestUrl, "https://atcoder.jp/contests/abc100/tasks") {
+				t.Errorf("GetProblemIds() = %v, want %v", requestUrl, "https://atcoder.jp/contests/abc100/tasks")
 				return
 			}
 		})

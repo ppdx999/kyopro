@@ -2,12 +2,15 @@ package atcoder_test
 
 import (
 	"errors"
+	"io"
+	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/ppdx999/kyopro/internal/domain/model"
 	"github.com/ppdx999/kyopro/internal/infrastructure/external_service/atcoder"
-	"github.com/ppdx999/kyopro/internal/testutil"
 )
 
 func TestGetTestCases(t *testing.T) {
@@ -83,11 +86,13 @@ func TestGetTestCases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockReq := &testutil.MockRequester{
-				ResponseStatusCode: tt.resStatusCode,
-				ResponseBody:       tt.html,
-				ResponseErr:        tt.reqErr,
-			}
+			mockCtrl := gomock.NewController(t)
+			defer mockCtrl.Finish()
+			mockReq := NewMockRequester(mockCtrl)
+			mockReq.EXPECT().Request(gomock.Any()).Return(&http.Response{
+				StatusCode: tt.resStatusCode,
+				Body:       io.NopCloser(strings.NewReader(tt.html)),
+			}, tt.reqErr)
 			atcoder := atcoder.NewAtcoder(mockReq)
 
 			got, err := atcoder.GetTestCases("", "")

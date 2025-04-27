@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/ppdx999/kyopro/internal/infrastructure/external_service/atcoder"
-	"github.com/ppdx999/kyopro/internal/testutil"
 )
 
 func TestLoginCheck(t *testing.T) {
@@ -48,11 +48,15 @@ func TestLoginCheck(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockRequester := testutil.MockRequester{
-				ResponseStatusCode: tt.resStatusCode,
-				ResponseErr:        tt.reqErr,
-			}
-			atcoder := atcoder.NewAtcoder(&mockRequester)
+			mockCtrl := gomock.NewController(t)
+			defer mockCtrl.Finish()
+
+			mockRequester := NewMockRequester(mockCtrl)
+			mockRequester.EXPECT().Request(gomock.Any()).Return(&http.Response{
+				StatusCode: tt.resStatusCode,
+			}, tt.reqErr)
+
+			atcoder := atcoder.NewAtcoder(mockRequester)
 
 			got, err := atcoder.LoginCheck()
 
