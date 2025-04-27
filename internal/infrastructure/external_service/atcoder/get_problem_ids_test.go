@@ -70,8 +70,13 @@ func TestGetProblemIds(t *testing.T) {
 			mockRequester.EXPECT().Request(gomock.Any()).
 				DoAndReturn(func(req *http.Request) (*http.Response, error) {
 					requestUrl = req.URL.String()
+					statusCode := tt.resStatusCode
+					if statusCode == 0 {
+						statusCode = http.StatusOK
+					}
+
 					return &http.Response{
-						StatusCode: tt.resStatusCode,
+						StatusCode: statusCode,
 						Body:       io.NopCloser(strings.NewReader(tt.html)),
 					}, tt.reqErr
 				},

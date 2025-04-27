@@ -89,8 +89,12 @@ func TestGetTestCases(t *testing.T) {
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
 			mockReq := NewMockRequester(mockCtrl)
+			statusCode := tt.resStatusCode
+			if statusCode == 0 {
+				statusCode = http.StatusOK
+			}
 			mockReq.EXPECT().Request(gomock.Any()).Return(&http.Response{
-				StatusCode: tt.resStatusCode,
+				StatusCode: statusCode,
 				Body:       io.NopCloser(strings.NewReader(tt.html)),
 			}, tt.reqErr)
 			atcoder := atcoder.NewAtcoder(mockReq)

@@ -2,7 +2,10 @@ package atcoder_test
 
 import (
 	"errors"
+	"io"
 	"net/http"
+	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -52,8 +55,22 @@ func TestLoginCheck(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			mockRequester := NewMockRequester(mockCtrl)
+			statusCode := tt.resStatusCode
+			if statusCode == 0 {
+				statusCode = http.StatusOK
+			}
+			path := "/contests/abc001/submit"
+			if statusCode == http.StatusFound {
+				path = "/login"
+			}
 			mockRequester.EXPECT().Request(gomock.Any()).Return(&http.Response{
-				StatusCode: tt.resStatusCode,
+				Request: &http.Request{
+					URL: &url.URL{
+						Path: path,
+					},
+				},
+				StatusCode: statusCode,
+				Body:       io.NopCloser(strings.NewReader("")),
 			}, tt.reqErr)
 
 			atcoder := atcoder.NewAtcoder(mockRequester)
