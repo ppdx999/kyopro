@@ -8,10 +8,10 @@ func ProblemIdsGetter() problem.ProblemIdsGetter {
 
 func ProblemDirMaker() problem.ProblemDirMaker {
 	var GetWd = func() problem.GetWd {
-		return FileSystem()
+		return OperationSystem()
 	}
 	var PublicDirMaker = func() problem.PublicDirMaker {
-		return FileSystem()
+		return OperationSystem()
 	}
 
 	return problem.NewProblemDirMaker(
@@ -22,7 +22,7 @@ func ProblemDirMaker() problem.ProblemDirMaker {
 
 func CurrentProblemLoader() problem.CurrentProblemLoader {
 	var GetWd = func() problem.GetWd {
-		return FileSystem()
+		return OperationSystem()
 	}
 
 	return problem.NewCurrentProblemLoader(

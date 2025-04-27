@@ -1,8 +1,8 @@
-package filesystem
+package operation_system
 
 import "os"
 
-func (fs *FileSystem) MakePublicDir(path string) error {
+func (o *OperationSystem) MakePublicDir(path string) error {
 	if err := os.MkdirAll(path, 0755); err != nil {
 		return err
 	}

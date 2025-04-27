@@ -8,13 +8,13 @@ func TestCaseGetter() testcase.TestCasesGetter {
 
 func TestCaseSaver() testcase.TestCaseSaver {
 	var WorkspaceGetter = func() testcase.GetWd {
-		return FileSystem()
+		return OperationSystem()
 	}
 	var PublicDirMaker = func() testcase.PublicDirMaker {
-		return FileSystem()
+		return OperationSystem()
 	}
 	var PublicFileWriter = func() testcase.PublicFileWriter {
-		return FileSystem()
+		return OperationSystem()
 	}
 
 	return testcase.NewTestCaseFsSaver(

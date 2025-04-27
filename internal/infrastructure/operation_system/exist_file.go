@@ -1,8 +1,8 @@
-package filesystem
+package operation_system
 
 import "os"
 
-func (fs *FileSystem) ExistFile(path string) bool {
+func (o *OperationSystem) ExistFile(path string) bool {
 	if _, err := os.Stat(path); err != nil {
 		return false
 	}
