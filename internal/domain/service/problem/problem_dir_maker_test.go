@@ -15,7 +15,7 @@ func TestMakeProblemDir(t *testing.T) {
 		problem model.ProblemId
 	}
 	type mock struct {
-		getWd         *MockGetWd
+		getWd         *MockWdGetter
 		makePublicDir *MockPublicDirMaker
 	}
 	tests := []struct {
@@ -32,8 +32,8 @@ func TestMakeProblemDir(t *testing.T) {
 			},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/path/to/workspace", nil)
 						return m
 					}(),
@@ -53,8 +53,8 @@ func TestMakeProblemDir(t *testing.T) {
 			},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/path/to/workspace", nil)
 						return m
 					}(),
@@ -70,15 +70,15 @@ func TestMakeProblemDir(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "GetWdエラー",
+			name: "WdGetterエラー",
 			args: &args{
 				contest: model.ContestId("abc123"),
 				problem: model.ProblemId("1"),
 			},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("", errors.New("get wd error"))
 						return m
 					}(),

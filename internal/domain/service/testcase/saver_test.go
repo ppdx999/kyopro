@@ -14,7 +14,7 @@ func TestSaveTestCase(t *testing.T) {
 		tc *model.TestCase
 	}
 	type mock struct {
-		getWd            *MockGetWd
+		getWd            *MockWdGetter
 		publicDirMaker   *MockPublicDirMaker
 		publicFileWriter *MockPublicFileWriter
 	}
@@ -34,8 +34,8 @@ func TestSaveTestCase(t *testing.T) {
 			}},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/tmp", nil)
 						return m
 					}(),
@@ -62,8 +62,8 @@ func TestSaveTestCase(t *testing.T) {
 			}},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("", errors.New("getWd error"))
 						return m
 					}(),
@@ -88,8 +88,8 @@ func TestSaveTestCase(t *testing.T) {
 			}},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/tmp", nil)
 						return m
 					}(),
@@ -115,8 +115,8 @@ func TestSaveTestCase(t *testing.T) {
 			}},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/tmp", nil)
 						return m
 					}(),

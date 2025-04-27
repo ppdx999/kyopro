@@ -7,7 +7,7 @@ func TestCaseGetter() testcase.TestCasesGetter {
 }
 
 func TestCaseSaver() testcase.TestCaseSaver {
-	var WorkspaceGetter = func() testcase.GetWd {
+	var WorkspaceGetter = func() testcase.WdGetter {
 		return OperationSystem()
 	}
 	var PublicDirMaker = func() testcase.PublicDirMaker {

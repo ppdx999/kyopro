@@ -7,7 +7,7 @@ func ProblemIdsGetter() problem.ProblemIdsGetter {
 }
 
 func ProblemDirMaker() problem.ProblemDirMaker {
-	var GetWd = func() problem.GetWd {
+	var WdGetter = func() problem.WdGetter {
 		return OperationSystem()
 	}
 	var PublicDirMaker = func() problem.PublicDirMaker {
@@ -15,17 +15,17 @@ func ProblemDirMaker() problem.ProblemDirMaker {
 	}
 
 	return problem.NewProblemDirMaker(
-		GetWd(),
+		WdGetter(),
 		PublicDirMaker(),
 	)
 }
 
 func CurrentProblemLoader() problem.CurrentProblemLoader {
-	var GetWd = func() problem.GetWd {
+	var WdGetter = func() problem.WdGetter {
 		return OperationSystem()
 	}
 
 	return problem.NewCurrentProblemLoader(
-		GetWd(),
+		WdGetter(),
 	)
 }

@@ -1,7 +1,11 @@
 package testcase
 
-type GetWd interface {
+type WdGetter interface {
 	GetWd() (string, error)
+}
+
+type FileExister interface {
+	ExistFile(path string) (bool, error)
 }
 
 type PublicDirMaker interface {

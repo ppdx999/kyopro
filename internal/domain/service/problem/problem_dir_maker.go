@@ -7,7 +7,7 @@ import (
 )
 
 type problemDirMaker struct {
-	wd       GetWd
+	wd       WdGetter
 	dirMaker PublicDirMaker
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 type currentProblemLoader struct {
-	wd GetWd
+	wd WdGetter
 }
 
 func (l *currentProblemLoader) LoadCurrentProblem() (*model.Problem, error) {

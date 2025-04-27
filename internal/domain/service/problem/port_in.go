@@ -6,7 +6,7 @@ type CurrentProblemLoader interface {
 	LoadCurrentProblem() (*model.Problem, error)
 }
 
-func NewCurrentProblemLoader(wd GetWd) CurrentProblemLoader {
+func NewCurrentProblemLoader(wd WdGetter) CurrentProblemLoader {
 	return &currentProblemLoader{wd: wd}
 }
 
@@ -15,7 +15,7 @@ type ProblemDirMaker interface {
 }
 
 func NewProblemDirMaker(
-	wd GetWd,
+	wd WdGetter,
 	dirMaker PublicDirMaker,
 ) ProblemDirMaker {
 	return &problemDirMaker{wd: wd, dirMaker: dirMaker}

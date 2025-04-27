@@ -1,6 +1,6 @@
 package problem
 
-type GetWd interface {
+type WdGetter interface {
 	GetWd() (string, error)
 }
 

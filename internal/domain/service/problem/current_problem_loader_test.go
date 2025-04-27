@@ -11,7 +11,7 @@ import (
 
 func TestLoadCurrentProblem(t *testing.T) {
 	type mock struct {
-		getWd *MockGetWd
+		getWd *MockWdGetter
 	}
 	tests := []struct {
 		name string
@@ -22,8 +22,8 @@ func TestLoadCurrentProblem(t *testing.T) {
 			name: "正常系",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/home/atcoder/contest_A/problem_B", nil)
 						return m
 					}(),
@@ -35,8 +35,8 @@ func TestLoadCurrentProblem(t *testing.T) {
 			name: "ルートディレクトリで実行",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/", nil)
 						return m
 					}(),
@@ -48,8 +48,8 @@ func TestLoadCurrentProblem(t *testing.T) {
 			name: "問題IDが空",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("/contest_A", nil)
 						return m
 					}(),
@@ -57,11 +57,11 @@ func TestLoadCurrentProblem(t *testing.T) {
 			},
 		},
 		{
-			name: "GetWdエラー",
+			name: "WdGetterエラー",
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
-					getWd: func() *MockGetWd {
-						m := NewMockGetWd(c)
+					getWd: func() *MockWdGetter {
+						m := NewMockWdGetter(c)
 						m.EXPECT().GetWd().Return("", errors.New("get wd error"))
 						return m
 					}(),

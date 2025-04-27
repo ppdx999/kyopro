@@ -8,7 +8,7 @@ import (
 )
 
 type testCaseSaver struct {
-	wd         GetWd
+	wd         WdGetter
 	dirMaker   PublicDirMaker
 	fileWriter PublicFileWriter
 }
