@@ -22,11 +22,11 @@ func SessionAsker() session.SessionAsker {
 
 func SessionLoader() session.SessionLoader {
 	var ReadSecretFile = func() session.ReadSecretFile {
-		return FsImpl()
+		return FileSystem()
 	}
 
 	var ExitFile = func() session.ExistFile {
-		return FsImpl()
+		return FileSystem()
 	}
 
 	return session.NewSessionLoaderImpl(
@@ -38,11 +38,11 @@ func SessionLoader() session.SessionLoader {
 
 func SessionSaver() session.SessionSaver {
 	var MakePublicDir = func() session.MakePublicDir {
-		return FsImpl()
+		return FileSystem()
 	}
 
 	var WriteSecretFile = func() session.WriteSecretFile {
-		return FsImpl()
+		return FileSystem()
 	}
 
 	return session.NewSessionSaverImpl(
