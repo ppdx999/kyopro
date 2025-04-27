@@ -25,19 +25,19 @@ func Test_initer_Init(t *testing.T) {
 	}{
 		{
 			name: "正常系",
-			args: &args{c: "abc100"},
+			args: &args{c: model.ContestId("abc100")},
 			mocks: func(c *gomock.Controller) *mocks {
 				return &mocks{
 					problemIdsGetter: func() *problem_mock.MockProblemIdsGetter {
 						m := problem_mock.NewMockProblemIdsGetter(c)
-						m.EXPECT().GetProblemIds("abc100").Return([]model.ProblemId{"a", "b", "c"}, nil)
+						m.EXPECT().GetProblemIds(model.ContestId("abc100")).Return([]model.ProblemId{"a", "b", "c"}, nil)
 						return m
 					}(),
 					problemDirMaker: func() *problem_mock.MockProblemDirMaker {
 						m := problem_mock.NewMockProblemDirMaker(c)
-						m.EXPECT().MakeProblemDir("abc100", "a").Return(nil)
-						m.EXPECT().MakeProblemDir("abc100", "b").Return(nil)
-						m.EXPECT().MakeProblemDir("abc100", "c").Return(nil)
+						m.EXPECT().MakeProblemDir(model.ContestId("abc100"), model.ProblemId("a")).Return(nil)
+						m.EXPECT().MakeProblemDir(model.ContestId("abc100"), model.ProblemId("b")).Return(nil)
+						m.EXPECT().MakeProblemDir(model.ContestId("abc100"), model.ProblemId("c")).Return(nil)
 						return m
 					}(),
 				}
@@ -56,10 +56,7 @@ func Test_initer_Init(t *testing.T) {
 				mocks.problemDirMaker,
 			)
 
-			// Act
-			s.Init(tt.args.c)
-
-			// Assert
+			// Act & Assert
 			if err := s.Init(tt.args.c); (err != nil) != tt.wantErr {
 				t.Errorf("initer.Init() error = %v, wantErr %v", err, tt.wantErr)
 			}

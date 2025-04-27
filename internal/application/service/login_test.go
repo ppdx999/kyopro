@@ -5,6 +5,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	application_service "github.com/ppdx999/kyopro/internal/application/service"
+	"github.com/ppdx999/kyopro/internal/domain/model"
 	session_mock "github.com/ppdx999/kyopro/internal/domain/service/session/mock"
 	user_mock "github.com/ppdx999/kyopro/internal/domain/service/user/mock"
 )
@@ -27,17 +28,18 @@ func Test_loginer_Login(t *testing.T) {
 				return &mocks{
 					sessionAsker: func() *session_mock.MockSessionAsker {
 						m := session_mock.NewMockSessionAsker(c)
-						m.EXPECT().AskSession().Return("session", nil)
+						m.EXPECT().AskSession().Return(model.SessionSecret("session"), nil)
 						return m
 					}(),
 					loginChecker: func() *user_mock.MockLoginChecker {
 						m := user_mock.NewMockLoginChecker(c)
-						m.EXPECT().LoginCheck().Return(false, nil).Return(true, nil)
+						m.EXPECT().LoginCheck().Return(false, nil)
+						m.EXPECT().LoginCheck().Return(true, nil)
 						return m
 					}(),
 					sessionSaver: func() *session_mock.MockSessionSaver {
 						m := session_mock.NewMockSessionSaver(c)
-						m.EXPECT().SaveSession("session").Return(nil)
+						m.EXPECT().SaveSession(model.SessionSecret("session")).Return(nil)
 						return m
 					}(),
 					msgSender: func() *user_mock.MockMsgSender {
@@ -55,6 +57,11 @@ func Test_loginer_Login(t *testing.T) {
 					loginChecker: func() *user_mock.MockLoginChecker {
 						m := user_mock.NewMockLoginChecker(c)
 						m.EXPECT().LoginCheck().Return(true, nil)
+						return m
+					}(),
+					msgSender: func() *user_mock.MockMsgSender {
+						m := user_mock.NewMockMsgSender(c)
+						m.EXPECT().SendMsg("すでにログインしています")
 						return m
 					}(),
 				}

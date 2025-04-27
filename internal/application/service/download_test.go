@@ -38,7 +38,7 @@ func Test_downloader_Download(t *testing.T) {
 					}(),
 					getter: func() *testcase_mock.MockTestCasesGetter {
 						m := testcase_mock.NewMockTestCasesGetter(c)
-						m.EXPECT().GetTestCases("abc100", "a").Return([]*model.TestCase{
+						m.EXPECT().GetTestCases(model.ContestId("abc100"), model.ProblemId("a")).Return([]*model.TestCase{
 							{
 								ID:    "0",
 								Input: []byte("input"),
@@ -88,7 +88,7 @@ func Test_downloader_Download(t *testing.T) {
 					}(),
 					getter: func() *testcase_mock.MockTestCasesGetter {
 						m := testcase_mock.NewMockTestCasesGetter(c)
-						m.EXPECT().GetTestCases("abc100", "a").Return(nil, errors.New("testCasesGetter error"))
+						m.EXPECT().GetTestCases(model.ContestId("abc100"), model.ProblemId("a")).Return(nil, errors.New("testCasesGetter error"))
 						return m
 					}(),
 				}
@@ -111,7 +111,7 @@ func Test_downloader_Download(t *testing.T) {
 					}(),
 					getter: func() *testcase_mock.MockTestCasesGetter {
 						m := testcase_mock.NewMockTestCasesGetter(c)
-						m.EXPECT().GetTestCases("abc100", "a").Return([]*model.TestCase{
+						m.EXPECT().GetTestCases(model.ContestId("abc100"), model.ProblemId("a")).Return([]*model.TestCase{
 							{
 								ID:    "0",
 								Input: []byte("input"),
