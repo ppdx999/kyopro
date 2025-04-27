@@ -1,4 +1,4 @@
-package downlaod
+package application_service
 
 import (
 	"github.com/ppdx999/kyopro/internal/domain/service/problem"
@@ -6,31 +6,27 @@ import (
 )
 
 /*
-DownloadServiceは問題のテストケースをダウンロードします。
+downloaderは問題のテストケースをダウンロードします。
 */
-type DownloadService interface {
-	Download() error
-}
-
-type DownloadServiceImpl struct {
+type downloader struct {
 	loader problem.CurrentProblemLoader
 	getter testcase.TestCasesGetter
 	saver  testcase.TestCaseSaver
 }
 
-func NewDownloadServiceImpl(
+func NewDownloader(
 	loader problem.CurrentProblemLoader,
 	getter testcase.TestCasesGetter,
 	saver testcase.TestCaseSaver,
-) *DownloadServiceImpl {
-	return &DownloadServiceImpl{
+) *downloader {
+	return &downloader{
 		loader: loader,
 		getter: getter,
 		saver:  saver,
 	}
 }
 
-func (d *DownloadServiceImpl) Download() error {
+func (d *downloader) Download() error {
 	p, err := d.loader.LoadCurrentProblem()
 	if err != nil {
 		return err

@@ -1,4 +1,4 @@
-package login
+package application_service
 
 import (
 	"github.com/ppdx999/kyopro/internal/domain/service/session"
@@ -8,24 +8,20 @@ import (
 /*
 LoginServiceはユーザーからSession情報を受け取り、Atcoderにログインして、結果を出力します
 */
-type LoginService interface {
-	Login() error
-}
-
-type LoginServiceImpl struct {
+type loginer struct {
 	sessionAsker session.SessionAsker
 	loginChecker user.LoginChecker
 	sessionSaver session.SessionSaver
 	msgSender    user.MsgSender
 }
 
-func NewLoginServiceImpl(
+func NewLoginer(
 	sessionAsker session.SessionAsker,
 	loginChecker user.LoginChecker,
 	sessionSaver session.SessionSaver,
 	msgSender user.MsgSender,
-) *LoginServiceImpl {
-	return &LoginServiceImpl{
+) *loginer {
+	return &loginer{
 		sessionAsker: sessionAsker,
 		loginChecker: loginChecker,
 		sessionSaver: sessionSaver,
@@ -33,7 +29,7 @@ func NewLoginServiceImpl(
 	}
 }
 
-func (l *LoginServiceImpl) Login() error {
+func (l *loginer) Login() error {
 	isLogin, err := l.loginChecker.LoginCheck()
 	if err != nil {
 		return err
