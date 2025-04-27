@@ -8,118 +8,229 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/ppdx999/kyopro/internal/domain/model"
 )
 
-// MockSessionAsker is a mock of SessionAsker interface.
-type MockSessionAsker struct {
+// MockUserInput is a mock of UserInput interface.
+type MockUserInput struct {
 	ctrl     *gomock.Controller
-	recorder *MockSessionAskerMockRecorder
+	recorder *MockUserInputMockRecorder
 }
 
-// MockSessionAskerMockRecorder is the mock recorder for MockSessionAsker.
-type MockSessionAskerMockRecorder struct {
-	mock *MockSessionAsker
+// MockUserInputMockRecorder is the mock recorder for MockUserInput.
+type MockUserInputMockRecorder struct {
+	mock *MockUserInput
 }
 
-// NewMockSessionAsker creates a new mock instance.
-func NewMockSessionAsker(ctrl *gomock.Controller) *MockSessionAsker {
-	mock := &MockSessionAsker{ctrl: ctrl}
-	mock.recorder = &MockSessionAskerMockRecorder{mock}
+// NewMockUserInput creates a new mock instance.
+func NewMockUserInput(ctrl *gomock.Controller) *MockUserInput {
+	mock := &MockUserInput{ctrl: ctrl}
+	mock.recorder = &MockUserInputMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSessionAsker) EXPECT() *MockSessionAskerMockRecorder {
+func (m *MockUserInput) EXPECT() *MockUserInputMockRecorder {
 	return m.recorder
 }
 
-// AskSession mocks base method.
-func (m *MockSessionAsker) AskSession() (model.SessionSecret, error) {
+// UserInput mocks base method.
+func (m *MockUserInput) UserInput() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AskSession")
-	ret0, _ := ret[0].(model.SessionSecret)
+	ret := m.ctrl.Call(m, "UserInput")
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// AskSession indicates an expected call of AskSession.
-func (mr *MockSessionAskerMockRecorder) AskSession() *gomock.Call {
+// UserInput indicates an expected call of UserInput.
+func (mr *MockUserInputMockRecorder) UserInput() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskSession", reflect.TypeOf((*MockSessionAsker)(nil).AskSession))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserInput", reflect.TypeOf((*MockUserInput)(nil).UserInput))
 }
 
-// MockSessionLoader is a mock of SessionLoader interface.
-type MockSessionLoader struct {
+// MockHome is a mock of Home interface.
+type MockHome struct {
 	ctrl     *gomock.Controller
-	recorder *MockSessionLoaderMockRecorder
+	recorder *MockHomeMockRecorder
 }
 
-// MockSessionLoaderMockRecorder is the mock recorder for MockSessionLoader.
-type MockSessionLoaderMockRecorder struct {
-	mock *MockSessionLoader
+// MockHomeMockRecorder is the mock recorder for MockHome.
+type MockHomeMockRecorder struct {
+	mock *MockHome
 }
 
-// NewMockSessionLoader creates a new mock instance.
-func NewMockSessionLoader(ctrl *gomock.Controller) *MockSessionLoader {
-	mock := &MockSessionLoader{ctrl: ctrl}
-	mock.recorder = &MockSessionLoaderMockRecorder{mock}
+// NewMockHome creates a new mock instance.
+func NewMockHome(ctrl *gomock.Controller) *MockHome {
+	mock := &MockHome{ctrl: ctrl}
+	mock.recorder = &MockHomeMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSessionLoader) EXPECT() *MockSessionLoaderMockRecorder {
+func (m *MockHome) EXPECT() *MockHomeMockRecorder {
 	return m.recorder
 }
 
-// LoadSession mocks base method.
-func (m *MockSessionLoader) LoadSession() (model.SessionSecret, error) {
+// Home mocks base method.
+func (m *MockHome) Home() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadSession")
-	ret0, _ := ret[0].(model.SessionSecret)
+	ret := m.ctrl.Call(m, "Home")
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// LoadSession indicates an expected call of LoadSession.
-func (mr *MockSessionLoaderMockRecorder) LoadSession() *gomock.Call {
+// Home indicates an expected call of Home.
+func (mr *MockHomeMockRecorder) Home() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadSession", reflect.TypeOf((*MockSessionLoader)(nil).LoadSession))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Home", reflect.TypeOf((*MockHome)(nil).Home))
 }
 
-// MockSessionSaver is a mock of SessionSaver interface.
-type MockSessionSaver struct {
+// MockMakePublicDir is a mock of MakePublicDir interface.
+type MockMakePublicDir struct {
 	ctrl     *gomock.Controller
-	recorder *MockSessionSaverMockRecorder
+	recorder *MockMakePublicDirMockRecorder
 }
 
-// MockSessionSaverMockRecorder is the mock recorder for MockSessionSaver.
-type MockSessionSaverMockRecorder struct {
-	mock *MockSessionSaver
+// MockMakePublicDirMockRecorder is the mock recorder for MockMakePublicDir.
+type MockMakePublicDirMockRecorder struct {
+	mock *MockMakePublicDir
 }
 
-// NewMockSessionSaver creates a new mock instance.
-func NewMockSessionSaver(ctrl *gomock.Controller) *MockSessionSaver {
-	mock := &MockSessionSaver{ctrl: ctrl}
-	mock.recorder = &MockSessionSaverMockRecorder{mock}
+// NewMockMakePublicDir creates a new mock instance.
+func NewMockMakePublicDir(ctrl *gomock.Controller) *MockMakePublicDir {
+	mock := &MockMakePublicDir{ctrl: ctrl}
+	mock.recorder = &MockMakePublicDirMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSessionSaver) EXPECT() *MockSessionSaverMockRecorder {
+func (m *MockMakePublicDir) EXPECT() *MockMakePublicDirMockRecorder {
 	return m.recorder
 }
 
-// SaveSession mocks base method.
-func (m *MockSessionSaver) SaveSession(arg0 model.SessionSecret) error {
+// MakePublicDir mocks base method.
+func (m *MockMakePublicDir) MakePublicDir(path string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveSession", arg0)
+	ret := m.ctrl.Call(m, "MakePublicDir", path)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// SaveSession indicates an expected call of SaveSession.
-func (mr *MockSessionSaverMockRecorder) SaveSession(arg0 interface{}) *gomock.Call {
+// MakePublicDir indicates an expected call of MakePublicDir.
+func (mr *MockMakePublicDirMockRecorder) MakePublicDir(path interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveSession", reflect.TypeOf((*MockSessionSaver)(nil).SaveSession), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MakePublicDir", reflect.TypeOf((*MockMakePublicDir)(nil).MakePublicDir), path)
+}
+
+// MockExistFile is a mock of ExistFile interface.
+type MockExistFile struct {
+	ctrl     *gomock.Controller
+	recorder *MockExistFileMockRecorder
+}
+
+// MockExistFileMockRecorder is the mock recorder for MockExistFile.
+type MockExistFileMockRecorder struct {
+	mock *MockExistFile
+}
+
+// NewMockExistFile creates a new mock instance.
+func NewMockExistFile(ctrl *gomock.Controller) *MockExistFile {
+	mock := &MockExistFile{ctrl: ctrl}
+	mock.recorder = &MockExistFileMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockExistFile) EXPECT() *MockExistFileMockRecorder {
+	return m.recorder
+}
+
+// ExistFile mocks base method.
+func (m *MockExistFile) ExistFile(path string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExistFile", path)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// ExistFile indicates an expected call of ExistFile.
+func (mr *MockExistFileMockRecorder) ExistFile(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExistFile", reflect.TypeOf((*MockExistFile)(nil).ExistFile), path)
+}
+
+// MockReadSecretFile is a mock of ReadSecretFile interface.
+type MockReadSecretFile struct {
+	ctrl     *gomock.Controller
+	recorder *MockReadSecretFileMockRecorder
+}
+
+// MockReadSecretFileMockRecorder is the mock recorder for MockReadSecretFile.
+type MockReadSecretFileMockRecorder struct {
+	mock *MockReadSecretFile
+}
+
+// NewMockReadSecretFile creates a new mock instance.
+func NewMockReadSecretFile(ctrl *gomock.Controller) *MockReadSecretFile {
+	mock := &MockReadSecretFile{ctrl: ctrl}
+	mock.recorder = &MockReadSecretFileMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockReadSecretFile) EXPECT() *MockReadSecretFileMockRecorder {
+	return m.recorder
+}
+
+// ReadSecretFile mocks base method.
+func (m *MockReadSecretFile) ReadSecretFile(path string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadSecretFile", path)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadSecretFile indicates an expected call of ReadSecretFile.
+func (mr *MockReadSecretFileMockRecorder) ReadSecretFile(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadSecretFile", reflect.TypeOf((*MockReadSecretFile)(nil).ReadSecretFile), path)
+}
+
+// MockWriteSecretFile is a mock of WriteSecretFile interface.
+type MockWriteSecretFile struct {
+	ctrl     *gomock.Controller
+	recorder *MockWriteSecretFileMockRecorder
+}
+
+// MockWriteSecretFileMockRecorder is the mock recorder for MockWriteSecretFile.
+type MockWriteSecretFileMockRecorder struct {
+	mock *MockWriteSecretFile
+}
+
+// NewMockWriteSecretFile creates a new mock instance.
+func NewMockWriteSecretFile(ctrl *gomock.Controller) *MockWriteSecretFile {
+	mock := &MockWriteSecretFile{ctrl: ctrl}
+	mock.recorder = &MockWriteSecretFileMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockWriteSecretFile) EXPECT() *MockWriteSecretFileMockRecorder {
+	return m.recorder
+}
+
+// WriteSecretFile mocks base method.
+func (m *MockWriteSecretFile) WriteSecretFile(path string, data []byte) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WriteSecretFile", path, data)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// WriteSecretFile indicates an expected call of WriteSecretFile.
+func (mr *MockWriteSecretFileMockRecorder) WriteSecretFile(path, data interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteSecretFile", reflect.TypeOf((*MockWriteSecretFile)(nil).WriteSecretFile), path, data)
 }

@@ -1,25 +1,15 @@
 package session
 
-type UserInput interface {
-	UserInput() (string, error)
+import "github.com/ppdx999/kyopro/internal/domain/model"
+
+type SessionAsker interface {
+	AskSession() (model.SessionSecret, error)
 }
 
-type Home interface {
-	Home() (string, error)
+type SessionLoader interface {
+	LoadSession() (model.SessionSecret, error)
 }
 
-type MakePublicDir interface {
-	MakePublicDir(path string) error
-}
-
-type ExistFile interface {
-	ExistFile(path string) bool
-}
-
-type ReadSecretFile interface {
-	ReadSecretFile(path string) ([]byte, error)
-}
-
-type WriteSecretFile interface {
-	WriteSecretFile(path string, data []byte) error
+type SessionSaver interface {
+	SaveSession(model.SessionSecret) error
 }
