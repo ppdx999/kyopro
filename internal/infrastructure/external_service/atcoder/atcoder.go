@@ -2,16 +2,14 @@ package atcoder
 
 import (
 	"net/url"
-
-	"github.com/ppdx999/kyopro/internal/requester"
 )
 
 type Atcoder struct {
 	baseUrl *url.URL
-	r       requester.Requester
+	r       Requester
 }
 
-func NewAtcoder(r requester.Requester) *Atcoder {
+func NewAtcoder(r Requester) *Atcoder {
 	baseUrl, _ := url.Parse("https://atcoder.jp")
 	return &Atcoder{
 		baseUrl: baseUrl,

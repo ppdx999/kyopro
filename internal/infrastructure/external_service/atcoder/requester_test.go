@@ -44,7 +44,7 @@ func TestRequest(t *testing.T) {
 			defer ts.Close()
 
 			loader := &MockSessionLoader{session: "session"}
-			r := atcoder.NewAtcoderRequester(loader)
+			r := atcoder.NewRequester(loader)
 
 			req, _ := http.NewRequest("GET", ts.URL, nil)
 
