@@ -17,3 +17,7 @@ func UserInputFromConsole() *user.UserInputFromConsole {
 func MsgSender() user.MsgSender {
 	return &user.ConsoleMsgSender{}
 }
+
+func UserPipeline() user.Pipeline {
+	return &user.UserPipeline{}
+}

@@ -28,10 +28,17 @@ func Cmd() cli.Cmd {
 			MsgSender(),
 		)
 	}
+	var TestCmd = func() *cmds.TestCmd {
+		return cmds.NewTestCmd(
+			ApplicationServiceTest(),
+			MsgSender(),
+		)
+	}
 
 	cmd := Dispatcher()
 	cmd.Register(InitCmd())
 	cmd.Register(LoginCmd())
 	cmd.Register(DownloadCmd())
+	cmd.Register(TestCmd())
 	return &cmd
 }
