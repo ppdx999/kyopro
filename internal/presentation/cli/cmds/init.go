@@ -1,22 +1,22 @@
-package init
+package cmds
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
 
-	init_service "github.com/ppdx999/kyopro/internal/application/service/init"
+	application_service "github.com/ppdx999/kyopro/internal/application/service"
 	"github.com/ppdx999/kyopro/internal/domain/model"
 	"github.com/ppdx999/kyopro/internal/domain/service/user"
 	"github.com/ppdx999/kyopro/internal/presentation/cli"
 )
 
 type InitCmd struct {
-	srvc      init_service.InitService
+	srvc      application_service.Initer
 	msgSender user.MsgSender
 }
 
-func NewInitCmd(srvc init_service.InitService, msgSender user.MsgSender) *InitCmd {
+func NewInitCmd(srvc application_service.Initer, msgSender user.MsgSender) *InitCmd {
 	return &InitCmd{
 		srvc:      srvc,
 		msgSender: msgSender,
@@ -27,7 +27,16 @@ type InitCmdOpt struct {
 	ContestId model.ContestId
 }
 
-var usage = `
+func (c *InitCmd) Name() string {
+	return "init"
+}
+
+func (c *InitCmd) Description() string {
+	return "コンテストの初期設定を行います"
+}
+
+func (c *InitCmd) Usage() string {
+	var usage = `
 Usage:
 	kyopro init <contest_id>
 
@@ -38,15 +47,6 @@ Options:
 	-h, --help  Show this screen.
 `
 
-func (c *InitCmd) Name() string {
-	return "init"
-}
-
-func (c *InitCmd) Description() string {
-	return "コンテストの初期設定を行います"
-}
-
-func (c *InitCmd) Usage() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(
@@ -58,7 +58,7 @@ func (c *InitCmd) Usage() string {
 	return buf.String()
 }
 
-func (c *InitCmd) ParseArgs(args []string) (*InitCmdOpt, error) {
+func (c *InitCmd) parseArgs(args []string) (*InitCmdOpt, error) {
 	if len(args) != 1 {
 		return nil, errors.New("invalid args")
 	}
@@ -75,9 +75,9 @@ func (c *InitCmd) ParseArgs(args []string) (*InitCmdOpt, error) {
 }
 
 func (c *InitCmd) Run(args []string) cli.ExitCode {
-	opt, err := c.ParseArgs(args)
+	opt, err := c.parseArgs(args)
 	if err != nil {
-		c.msgSender.SendMsg(usage)
+		c.msgSender.SendMsg(c.Usage())
 		return cli.ExitErr
 	}
 

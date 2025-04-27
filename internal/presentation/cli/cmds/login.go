@@ -1,33 +1,25 @@
-package login
+package cmds
 
 import (
 	"bytes"
 	"fmt"
 
-	"github.com/ppdx999/kyopro/internal/application/service/login"
+	application_service "github.com/ppdx999/kyopro/internal/application/service"
 	"github.com/ppdx999/kyopro/internal/domain/service/user"
 	"github.com/ppdx999/kyopro/internal/presentation/cli"
 )
 
 type LoginCmd struct {
-	srvc      login.LoginService
+	srvc      application_service.Loginer
 	msgSender user.MsgSender
 }
 
-func NewLoginCmd(srvc login.LoginService, msgSender user.MsgSender) *LoginCmd {
+func NewLoginCmd(srvc application_service.Loginer, msgSender user.MsgSender) *LoginCmd {
 	return &LoginCmd{
 		srvc:      srvc,
 		msgSender: msgSender,
 	}
 }
-
-var usage = `
-Usage:
-	kyopro login
-
-Options:
-	-h, --help  ヘルプの表示
-`
 
 func (c *LoginCmd) Name() string {
 	return "login"
@@ -38,6 +30,13 @@ func (c *LoginCmd) Description() string {
 }
 
 func (c *LoginCmd) Usage() string {
+	var usage = `
+Usage:
+	kyopro login
+
+Options:
+	-h, --help  ヘルプの表示
+`
 	var buf bytes.Buffer
 
 	buf.WriteString(
@@ -51,7 +50,7 @@ func (c *LoginCmd) Usage() string {
 
 func (c *LoginCmd) Run(args []string) cli.ExitCode {
 	if len(args) != 0 {
-		c.msgSender.SendMsg(usage)
+		c.msgSender.SendMsg(c.Usage())
 		return cli.ExitErr
 	}
 
