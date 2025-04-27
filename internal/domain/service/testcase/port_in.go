@@ -3,7 +3,19 @@ package testcase
 import "github.com/ppdx999/kyopro/internal/domain/model"
 
 type TestCaseCurrentLoader interface {
-	LoadCurrentTestCase() (*model.TestCase, error)
+	LoadCurrentTestCases() ([]*model.TestCase, error)
+}
+
+func NewTestCaseCurrentLoader(
+	wdGetter WdGetter,
+	childFileNamesGetter ChildFileNamesGetter,
+	fileReader PublicFileReader,
+) TestCaseCurrentLoader {
+	return &testCaseCurrentLoader{
+		wdGetter:             wdGetter,
+		childFileNamesGetter: childFileNamesGetter,
+		publicFileReader:     fileReader,
+	}
 }
 
 type TestCasesGetter interface {

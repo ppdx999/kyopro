@@ -86,6 +86,82 @@ func (mr *MockFileExisterMockRecorder) ExistFile(path interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExistFile", reflect.TypeOf((*MockFileExister)(nil).ExistFile), path)
 }
 
+// MockPublicFileReader is a mock of PublicFileReader interface.
+type MockPublicFileReader struct {
+	ctrl     *gomock.Controller
+	recorder *MockPublicFileReaderMockRecorder
+}
+
+// MockPublicFileReaderMockRecorder is the mock recorder for MockPublicFileReader.
+type MockPublicFileReaderMockRecorder struct {
+	mock *MockPublicFileReader
+}
+
+// NewMockPublicFileReader creates a new mock instance.
+func NewMockPublicFileReader(ctrl *gomock.Controller) *MockPublicFileReader {
+	mock := &MockPublicFileReader{ctrl: ctrl}
+	mock.recorder = &MockPublicFileReaderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockPublicFileReader) EXPECT() *MockPublicFileReaderMockRecorder {
+	return m.recorder
+}
+
+// ReadPublicFile mocks base method.
+func (m *MockPublicFileReader) ReadPublicFile(path string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadPublicFile", path)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadPublicFile indicates an expected call of ReadPublicFile.
+func (mr *MockPublicFileReaderMockRecorder) ReadPublicFile(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadPublicFile", reflect.TypeOf((*MockPublicFileReader)(nil).ReadPublicFile), path)
+}
+
+// MockChildFileNamesGetter is a mock of ChildFileNamesGetter interface.
+type MockChildFileNamesGetter struct {
+	ctrl     *gomock.Controller
+	recorder *MockChildFileNamesGetterMockRecorder
+}
+
+// MockChildFileNamesGetterMockRecorder is the mock recorder for MockChildFileNamesGetter.
+type MockChildFileNamesGetterMockRecorder struct {
+	mock *MockChildFileNamesGetter
+}
+
+// NewMockChildFileNamesGetter creates a new mock instance.
+func NewMockChildFileNamesGetter(ctrl *gomock.Controller) *MockChildFileNamesGetter {
+	mock := &MockChildFileNamesGetter{ctrl: ctrl}
+	mock.recorder = &MockChildFileNamesGetterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockChildFileNamesGetter) EXPECT() *MockChildFileNamesGetterMockRecorder {
+	return m.recorder
+}
+
+// ChildFileNames mocks base method.
+func (m *MockChildFileNamesGetter) ChildFileNames(path string) ([]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ChildFileNames", path)
+	ret0, _ := ret[0].([]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ChildFileNames indicates an expected call of ChildFileNames.
+func (mr *MockChildFileNamesGetterMockRecorder) ChildFileNames(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChildFileNames", reflect.TypeOf((*MockChildFileNamesGetter)(nil).ChildFileNames), path)
+}
+
 // MockPublicDirMaker is a mock of PublicDirMaker interface.
 type MockPublicDirMaker struct {
 	ctrl     *gomock.Controller
