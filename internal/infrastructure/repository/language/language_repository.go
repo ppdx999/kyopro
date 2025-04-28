@@ -1,7 +1,18 @@
 package repository_language
 
-type RepositoryLanguage struct{}
+import "github.com/ppdx999/kyopro/internal/infrastructure/repository/language/language_resource"
 
-func NewRepositoryLanguage() *RepositoryLanguage {
-	return &RepositoryLanguage{}
+type RepositoryLanguage struct {
+	osCmdRunner language_resource.OsCmdRunner
+	fileRemover language_resource.FileRemover
+}
+
+func NewRepositoryLanguage(
+	osCmdRunner language_resource.OsCmdRunner,
+	fileRemover language_resource.FileRemover,
+) *RepositoryLanguage {
+	return &RepositoryLanguage{
+		osCmdRunner: osCmdRunner,
+		fileRemover: fileRemover,
+	}
 }
