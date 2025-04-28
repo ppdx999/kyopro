@@ -64,12 +64,13 @@ func (t *tester) Test() error {
 		} else {
 			fmt.Fprintf(buf, "❌ Test %s failed\n", tc.ID)
 			fmt.Fprintln(buf, "Input:")
-			fmt.Fprintf(buf, "%s\n", tc.Input)
+			fmt.Fprintf(buf, "%q\n", tc.Input)
 			fmt.Fprintln(buf, "Want:")
-			fmt.Fprintf(buf, "%s\n", tc.Want)
+			fmt.Fprintf(buf, "%q\n", tc.Want)
 			fmt.Fprintln(buf, "Got:")
-			fmt.Fprintf(buf, "%s\n", got)
+			fmt.Fprintf(buf, "%q\n", got)
 		}
+		t.msgSender.SendMsg(buf.String())
 	}
 
 	pipeline = t.userPipeline.Pipeline()
