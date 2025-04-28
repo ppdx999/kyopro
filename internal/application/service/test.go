@@ -2,7 +2,6 @@ package application_service
 
 import (
 	"bytes"
-	"fmt"
 
 	"github.com/ppdx999/kyopro/internal/domain/service/language"
 	"github.com/ppdx999/kyopro/internal/domain/service/testcase"
@@ -14,6 +13,7 @@ type tester struct {
 	testCasesCurrentLoader testcase.TestCaseCurrentLoader
 	languageDetector       language.LanguageDetector
 	languageTestcaseRunner language.LanguageTestCaseRunner
+	testCaseResultReporter testcase.TestCaseResultReporter
 	msgSender              user.MsgSender
 }
 
@@ -58,19 +58,8 @@ func (t *tester) Test() error {
 			t.msgSender.SendMsg(string(errMsg))
 		}
 
-		buf := bytes.NewBuffer(nil)
-		if bytes.Equal(got, tc.Want) {
-			fmt.Fprintf(buf, "✅ Test %s passed\n", tc.ID)
-		} else {
-			fmt.Fprintf(buf, "❌ Test %s failed\n", tc.ID)
-			fmt.Fprintln(buf, "Input:")
-			fmt.Fprintf(buf, "%q\n", tc.Input)
-			fmt.Fprintln(buf, "Want:")
-			fmt.Fprintf(buf, "%q\n", tc.Want)
-			fmt.Fprintln(buf, "Got:")
-			fmt.Fprintf(buf, "%q\n", got)
-		}
-		t.msgSender.SendMsg(buf.String())
+		msg := t.testCaseResultReporter.ReportTestCaseResult(got, tc)
+		t.msgSender.SendMsg(msg)
 	}
 
 	pipeline = t.userPipeline.Pipeline()

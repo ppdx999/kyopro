@@ -28,6 +28,17 @@ type TestCasesGetter interface {
 	)
 }
 
+type TestCaseResultReporter interface {
+	ReportTestCaseResult(
+		result []byte,
+		t *model.TestCase,
+	) string
+}
+
+func NewTestCaseResultReporter() TestCaseResultReporter {
+	return &resultReporter{}
+}
+
 type TestCaseSaver interface {
 	SaveTestCase(t *model.TestCase) error
 }
