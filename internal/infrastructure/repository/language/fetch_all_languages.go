@@ -7,8 +7,8 @@ import (
 
 func (r *RepositoryLanguage) FetchAllLanguages() ([]model.Language, error) {
 	var langs = []model.Language{
-		language_resource.NewCpp(r.osCmdRunner, r.fileRemover),
-		language_resource.NewPython(r.osCmdRunner),
+		language_resource.NewCpp(r.osCmdRunner, r.fileRemover, r.fileReader),
+		language_resource.NewPython(r.osCmdRunner, r.fileReader),
 	}
 	return langs, nil
 }

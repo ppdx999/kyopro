@@ -9,3 +9,11 @@ type OsCmdRunner interface {
 type FileRemover interface {
 	Remove(path string) error
 }
+
+type FileExister interface {
+	ExistFile(path string) bool
+}
+
+type FileReader interface {
+	ReadFileIfExist(path string) ([]byte, error)
+}

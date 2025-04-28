@@ -73,7 +73,7 @@ func TestLoginCheck(t *testing.T) {
 				Body:       io.NopCloser(strings.NewReader("")),
 			}, tt.reqErr)
 
-			atcoder := atcoder.NewAtcoder(mockRequester)
+			atcoder := atcoder.NewAtcoder(mockRequester, &MockUrlOpner{})
 
 			got, err := atcoder.LoginCheck()
 

@@ -7,6 +7,7 @@ import (
 type Cpp struct {
 	runner OsCmdRunner
 	rm     FileRemover
+	reader FileReader
 }
 
 func (c *Cpp) Name() string {
@@ -14,9 +15,9 @@ func (c *Cpp) Name() string {
 }
 
 func (c *Cpp) SourceCode() *model.SourceCode {
-	return &model.SourceCode{
-		Path: "main.cpp",
-	}
+	path := "main.cpp"
+	code, _ := c.reader.ReadFileIfExist(path)
+	return &model.SourceCode{Path: path, Code: code}
 }
 
 func (c *Cpp) Build(p *model.Pipeline) error {

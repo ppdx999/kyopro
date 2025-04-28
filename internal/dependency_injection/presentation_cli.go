@@ -34,11 +34,18 @@ func Cmd() cli.Cmd {
 			MsgSender(),
 		)
 	}
+	var SubmitCmd = func() *cmds.SubmitCmd {
+		return cmds.NewSubmitCmd(
+			ApplicationServiceSubmit(),
+			MsgSender(),
+		)
+	}
 
 	cmd := Dispatcher()
 	cmd.Register(InitCmd())
 	cmd.Register(LoginCmd())
 	cmd.Register(DownloadCmd())
 	cmd.Register(TestCmd())
+	cmd.Register(SubmitCmd())
 	return &cmd
 }

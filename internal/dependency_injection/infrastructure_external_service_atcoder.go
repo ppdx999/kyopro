@@ -8,6 +8,9 @@ func Atcoder() *atcoder.Atcoder {
 	var Requester = func() atcoder.Requester {
 		return atcoder.NewRequester(SessionLoader())
 	}
+	var UrlOpener = func() atcoder.UrlOpner {
+		return Browser()
+	}
 
-	return atcoder.NewAtcoder(Requester())
+	return atcoder.NewAtcoder(Requester(), UrlOpener())
 }

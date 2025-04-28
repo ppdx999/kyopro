@@ -17,3 +17,7 @@ type Loginer interface {
 type Tester interface {
 	Test() error
 }
+
+type Submiter interface {
+	Submit() error
+}

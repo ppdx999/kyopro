@@ -82,7 +82,7 @@ func TestGetProblemIds(t *testing.T) {
 				},
 				)
 
-			atcoder := atcoder.NewAtcoder(mockRequester)
+			atcoder := atcoder.NewAtcoder(mockRequester, &MockUrlOpner{})
 
 			got, err := atcoder.GetProblemIds("abc100")
 

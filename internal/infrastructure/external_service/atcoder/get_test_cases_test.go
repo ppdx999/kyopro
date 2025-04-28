@@ -97,7 +97,7 @@ func TestGetTestCases(t *testing.T) {
 				StatusCode: statusCode,
 				Body:       io.NopCloser(strings.NewReader(tt.html)),
 			}, tt.reqErr)
-			atcoder := atcoder.NewAtcoder(mockReq)
+			atcoder := atcoder.NewAtcoder(mockReq, &MockUrlOpner{})
 
 			got, err := atcoder.GetTestCases("", "")
 			if (err != nil) != tt.wantErr {

@@ -12,9 +12,13 @@ func RepositoryLanguage() *repository_language.RepositoryLanguage {
 	var FileRemover = func() language_resource.FileRemover {
 		return OperationSystem()
 	}
+	var FileReader = func() language_resource.FileReader {
+		return OperationSystem()
+	}
 
 	return repository_language.NewRepositoryLanguage(
 		OsCmdRunner(),
 		FileRemover(),
+		FileReader(),
 	)
 }

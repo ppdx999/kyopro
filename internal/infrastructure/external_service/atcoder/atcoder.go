@@ -5,14 +5,16 @@ import (
 )
 
 type Atcoder struct {
-	baseUrl *url.URL
-	r       Requester
+	baseUrl   *url.URL
+	r         Requester
+	urlOpener UrlOpner
 }
 
-func NewAtcoder(r Requester) *Atcoder {
+func NewAtcoder(r Requester, u UrlOpner) *Atcoder {
 	baseUrl, _ := url.Parse("https://atcoder.jp")
 	return &Atcoder{
-		baseUrl: baseUrl,
-		r:       r,
+		baseUrl:   baseUrl,
+		r:         r,
+		urlOpener: u,
 	}
 }

@@ -5,14 +5,17 @@ import "github.com/ppdx999/kyopro/internal/infrastructure/repository/language/la
 type RepositoryLanguage struct {
 	osCmdRunner language_resource.OsCmdRunner
 	fileRemover language_resource.FileRemover
+	fileReader  language_resource.FileReader
 }
 
 func NewRepositoryLanguage(
 	osCmdRunner language_resource.OsCmdRunner,
 	fileRemover language_resource.FileRemover,
+	fileReader language_resource.FileReader,
 ) *RepositoryLanguage {
 	return &RepositoryLanguage{
 		osCmdRunner: osCmdRunner,
 		fileRemover: fileRemover,
+		fileReader:  fileReader,
 	}
 }
