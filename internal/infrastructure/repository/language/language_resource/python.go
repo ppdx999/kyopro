@@ -10,8 +10,10 @@ func (py *Python) Name() string {
 	return "python"
 }
 
-func (py *Python) MainFile() string {
-	return "main.py"
+func (py *Python) SourceCode() *model.SourceCode {
+	return &model.SourceCode{
+		Path: "main.py",
+	}
 }
 
 func (py *Python) Build(p *model.Pipeline) error {
@@ -19,7 +21,7 @@ func (py *Python) Build(p *model.Pipeline) error {
 }
 
 func (py *Python) Run(p *model.Pipeline) error {
-	return py.runner.Run([]string{"python", py.MainFile()}, p)
+	return py.runner.Run([]string{"python", py.SourceCode().Path}, p)
 }
 
 func (py *Python) Clean(p *model.Pipeline) error {

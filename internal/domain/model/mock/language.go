@@ -62,20 +62,6 @@ func (mr *MockLanguageMockRecorder) Clean(p interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Clean", reflect.TypeOf((*MockLanguage)(nil).Clean), p)
 }
 
-// MainFile mocks base method.
-func (m *MockLanguage) MainFile() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MainFile")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// MainFile indicates an expected call of MainFile.
-func (mr *MockLanguageMockRecorder) MainFile() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MainFile", reflect.TypeOf((*MockLanguage)(nil).MainFile))
-}
-
 // Name mocks base method.
 func (m *MockLanguage) Name() string {
 	m.ctrl.T.Helper()
@@ -102,4 +88,18 @@ func (m *MockLanguage) Run(p *model.Pipeline) error {
 func (mr *MockLanguageMockRecorder) Run(p interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockLanguage)(nil).Run), p)
+}
+
+// SourceCode mocks base method.
+func (m *MockLanguage) SourceCode() *model.SourceCode {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SourceCode")
+	ret0, _ := ret[0].(*model.SourceCode)
+	return ret0
+}
+
+// SourceCode indicates an expected call of SourceCode.
+func (mr *MockLanguageMockRecorder) SourceCode() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SourceCode", reflect.TypeOf((*MockLanguage)(nil).SourceCode))
 }

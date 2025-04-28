@@ -13,12 +13,14 @@ func (c *Cpp) Name() string {
 	return "c++"
 }
 
-func (c *Cpp) MainFile() string {
-	return "main.cpp"
+func (c *Cpp) SourceCode() *model.SourceCode {
+	return &model.SourceCode{
+		Path: "main.cpp",
+	}
 }
 
 func (c *Cpp) Build(p *model.Pipeline) error {
-	return c.runner.Run([]string{"g++", c.MainFile()}, p)
+	return c.runner.Run([]string{"g++", c.SourceCode().Path}, p)
 }
 
 func (c *Cpp) Run(p *model.Pipeline) error {

@@ -17,7 +17,7 @@ func (d *detector) DetectLanguage() (model.Language, error) {
 		return nil, err
 	}
 	for _, lang := range langs {
-		if d.fileExister.ExistFile(lang.MainFile()) {
+		if d.fileExister.ExistFile(lang.SourceCode().Path) {
 			return lang, nil
 		}
 	}

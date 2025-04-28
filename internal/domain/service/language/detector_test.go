@@ -30,14 +30,18 @@ func Test_detector_DetectLanguage(t *testing.T) {
 							func() model.Language {
 								// Python
 								m := model_mock.NewMockLanguage(c)
-								m.EXPECT().MainFile().Return("main.py")
+								m.EXPECT().SourceCode().Return(&model.SourceCode{
+									Path: "main.py",
+								})
 								return m
 							}(),
 							func() model.Language {
 								// Golang
 								m := model_mock.NewMockLanguage(c)
 								m.EXPECT().Name().Return("Go")
-								m.EXPECT().MainFile().Return("main.go")
+								m.EXPECT().SourceCode().Return(&model.SourceCode{
+									Path: "main.go",
+								})
 								return m
 							}(),
 						}, nil)
