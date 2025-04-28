@@ -1,6 +1,7 @@
 package cmds_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -15,7 +16,7 @@ import (
 func TestCmdTestRun(t *testing.T) {
 	var defaultMsgSender = func(c *gomock.Controller) *user_mock.MockMsgSender {
 		m := user_mock.NewMockMsgSender(c)
-		m.EXPECT().SendMsg(gomock.Any())
+		m.EXPECT().SendMsg(gomock.Any()).AnyTimes()
 		return m
 	}
 	type mock struct {
@@ -68,6 +69,11 @@ func TestCmdTestRun(t *testing.T) {
 			args: []string{},
 			mock: func(c *gomock.Controller) *mock {
 				return &mock{
+					service: func() *application_service_mock.MockTester {
+						m := application_service_mock.NewMockTester(c)
+						m.EXPECT().Test().Return(errors.New("test error"))
+						return m
+					}(),
 					msg: defaultMsgSender(c),
 				}
 			},

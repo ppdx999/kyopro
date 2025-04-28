@@ -34,8 +34,8 @@ func TestGetTestCases(t *testing.T) {
 			want: []*model.TestCase{
 				{
 					ID:    "1",
-					Input: []byte("1 2"),
-					Want:  []byte("3"),
+					Input: []byte("1 2\n"),
+					Want:  []byte("3\n"),
 				},
 			},
 		},
@@ -52,13 +52,13 @@ func TestGetTestCases(t *testing.T) {
 			want: []*model.TestCase{
 				{
 					ID:    "1",
-					Input: []byte("10 20"),
-					Want:  []byte("30"),
+					Input: []byte("10 20\n"),
+					Want:  []byte("30\n"),
 				},
 				{
 					ID:    "2",
-					Input: []byte("-5 5"),
-					Want:  []byte("0"),
+					Input: []byte("-5 5\n"),
+					Want:  []byte("0\n"),
 				},
 			},
 		},
