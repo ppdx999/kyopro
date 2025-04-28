@@ -36,8 +36,8 @@ func (a *Atcoder) parseTestCases(html string) ([]*model.TestCase, error) {
 			return nil, fmt.Errorf("入力/出力の順番が想定と異なります")
 		}
 		id := strconv.Itoa(i/2 + 1)
-		input := strings.TrimSpace(matches[i][2])
-		want := strings.TrimSpace(matches[i+1][2])
+		input := strings.TrimSpace(matches[i][2]) + "\n"
+		want := strings.TrimSpace(matches[i+1][2]) + "\n"
 		t := model.NewTestCase(id)
 		t.Input = []byte(input)
 		t.Want = []byte(want)
