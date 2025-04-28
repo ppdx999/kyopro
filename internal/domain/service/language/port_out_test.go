@@ -35,10 +35,10 @@ func (m *MockAllLanguagesFetcher) EXPECT() *MockAllLanguagesFetcherMockRecorder 
 }
 
 // FetchAllLanguages mocks base method.
-func (m *MockAllLanguagesFetcher) FetchAllLanguages() ([]*model.Language, error) {
+func (m *MockAllLanguagesFetcher) FetchAllLanguages() ([]model.Language, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FetchAllLanguages")
-	ret0, _ := ret[0].([]*model.Language)
+	ret0, _ := ret[0].([]model.Language)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

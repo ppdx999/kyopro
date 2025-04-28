@@ -11,13 +11,13 @@ type detector struct {
 	fileExister         FileExister
 }
 
-func (d *detector) DetectLanguage() (*model.Language, error) {
+func (d *detector) DetectLanguage() (model.Language, error) {
 	langs, err := d.allLanguagesFetcher.FetchAllLanguages()
 	if err != nil {
 		return nil, err
 	}
 	for _, lang := range langs {
-		if d.fileExister.ExistFile(lang.MainFile) {
+		if d.fileExister.ExistFile(lang.MainFile()) {
 			return lang, nil
 		}
 	}

@@ -12,7 +12,7 @@ import (
 
 func Test_testcaseRunner_Run(t *testing.T) {
 	type args struct {
-		l *model.Language
+		l model.Language
 		t *model.TestCase
 	}
 	tests := []struct {
@@ -26,21 +26,17 @@ func Test_testcaseRunner_Run(t *testing.T) {
 			name: "success",
 			args: func(c *gomock.Controller) *args {
 				return &args{
-					l: &model.Language{
-						Name:     "Go",
-						MainFile: "main.go",
-						Runner: func() model.LanguageRunner {
-							m := model_mock.NewMockLanguageRunner(c)
-							m.EXPECT().Run("main.go", gomock.Any()).DoAndReturn(
-								func(entryFile string, p *model.Pipeline) error {
-									p.Outflow.Write([]byte("Output of main.go"))
-									p.ErrFlow.Write([]byte("Error of main.go"))
-									return nil
-								},
-							)
-							return m
-						}(),
-					},
+					l: func() model.Language {
+						m := model_mock.NewMockLanguage(c)
+						m.EXPECT().Run(gomock.Any()).DoAndReturn(
+							func(p *model.Pipeline) error {
+								p.Outflow.Write([]byte("Output of main.go"))
+								p.ErrFlow.Write([]byte("Error of main.go"))
+								return nil
+							},
+						)
+						return m
+					}(),
 					t: &model.TestCase{
 						ID:    "1",
 						Input: []byte("input 1.in"),

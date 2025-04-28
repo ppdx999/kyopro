@@ -11,113 +11,95 @@ import (
 	model "github.com/ppdx999/kyopro/internal/domain/model"
 )
 
-// MockLanguageBuilder is a mock of LanguageBuilder interface.
-type MockLanguageBuilder struct {
+// MockLanguage is a mock of Language interface.
+type MockLanguage struct {
 	ctrl     *gomock.Controller
-	recorder *MockLanguageBuilderMockRecorder
+	recorder *MockLanguageMockRecorder
 }
 
-// MockLanguageBuilderMockRecorder is the mock recorder for MockLanguageBuilder.
-type MockLanguageBuilderMockRecorder struct {
-	mock *MockLanguageBuilder
+// MockLanguageMockRecorder is the mock recorder for MockLanguage.
+type MockLanguageMockRecorder struct {
+	mock *MockLanguage
 }
 
-// NewMockLanguageBuilder creates a new mock instance.
-func NewMockLanguageBuilder(ctrl *gomock.Controller) *MockLanguageBuilder {
-	mock := &MockLanguageBuilder{ctrl: ctrl}
-	mock.recorder = &MockLanguageBuilderMockRecorder{mock}
+// NewMockLanguage creates a new mock instance.
+func NewMockLanguage(ctrl *gomock.Controller) *MockLanguage {
+	mock := &MockLanguage{ctrl: ctrl}
+	mock.recorder = &MockLanguageMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockLanguageBuilder) EXPECT() *MockLanguageBuilderMockRecorder {
+func (m *MockLanguage) EXPECT() *MockLanguageMockRecorder {
 	return m.recorder
 }
 
 // Build mocks base method.
-func (m *MockLanguageBuilder) Build(sourceFile string, p *model.Pipeline) error {
+func (m *MockLanguage) Build(p *model.Pipeline) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Build", sourceFile, p)
+	ret := m.ctrl.Call(m, "Build", p)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Build indicates an expected call of Build.
-func (mr *MockLanguageBuilderMockRecorder) Build(sourceFile, p interface{}) *gomock.Call {
+func (mr *MockLanguageMockRecorder) Build(p interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockLanguageBuilder)(nil).Build), sourceFile, p)
-}
-
-// MockLanguageRunner is a mock of LanguageRunner interface.
-type MockLanguageRunner struct {
-	ctrl     *gomock.Controller
-	recorder *MockLanguageRunnerMockRecorder
-}
-
-// MockLanguageRunnerMockRecorder is the mock recorder for MockLanguageRunner.
-type MockLanguageRunnerMockRecorder struct {
-	mock *MockLanguageRunner
-}
-
-// NewMockLanguageRunner creates a new mock instance.
-func NewMockLanguageRunner(ctrl *gomock.Controller) *MockLanguageRunner {
-	mock := &MockLanguageRunner{ctrl: ctrl}
-	mock.recorder = &MockLanguageRunnerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockLanguageRunner) EXPECT() *MockLanguageRunnerMockRecorder {
-	return m.recorder
-}
-
-// Run mocks base method.
-func (m *MockLanguageRunner) Run(entryFile string, p *model.Pipeline) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Run", entryFile, p)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Run indicates an expected call of Run.
-func (mr *MockLanguageRunnerMockRecorder) Run(entryFile, p interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockLanguageRunner)(nil).Run), entryFile, p)
-}
-
-// MockLanguageCleaner is a mock of LanguageCleaner interface.
-type MockLanguageCleaner struct {
-	ctrl     *gomock.Controller
-	recorder *MockLanguageCleanerMockRecorder
-}
-
-// MockLanguageCleanerMockRecorder is the mock recorder for MockLanguageCleaner.
-type MockLanguageCleanerMockRecorder struct {
-	mock *MockLanguageCleaner
-}
-
-// NewMockLanguageCleaner creates a new mock instance.
-func NewMockLanguageCleaner(ctrl *gomock.Controller) *MockLanguageCleaner {
-	mock := &MockLanguageCleaner{ctrl: ctrl}
-	mock.recorder = &MockLanguageCleanerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockLanguageCleaner) EXPECT() *MockLanguageCleanerMockRecorder {
-	return m.recorder
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockLanguage)(nil).Build), p)
 }
 
 // Clean mocks base method.
-func (m *MockLanguageCleaner) Clean(entryFile string, p *model.Pipeline) error {
+func (m *MockLanguage) Clean(p *model.Pipeline) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Clean", entryFile, p)
+	ret := m.ctrl.Call(m, "Clean", p)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Clean indicates an expected call of Clean.
-func (mr *MockLanguageCleanerMockRecorder) Clean(entryFile, p interface{}) *gomock.Call {
+func (mr *MockLanguageMockRecorder) Clean(p interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Clean", reflect.TypeOf((*MockLanguageCleaner)(nil).Clean), entryFile, p)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Clean", reflect.TypeOf((*MockLanguage)(nil).Clean), p)
+}
+
+// MainFile mocks base method.
+func (m *MockLanguage) MainFile() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MainFile")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// MainFile indicates an expected call of MainFile.
+func (mr *MockLanguageMockRecorder) MainFile() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MainFile", reflect.TypeOf((*MockLanguage)(nil).MainFile))
+}
+
+// Name mocks base method.
+func (m *MockLanguage) Name() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Name")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Name indicates an expected call of Name.
+func (mr *MockLanguageMockRecorder) Name() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Name", reflect.TypeOf((*MockLanguage)(nil).Name))
+}
+
+// Run mocks base method.
+func (m *MockLanguage) Run(p *model.Pipeline) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Run", p)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Run indicates an expected call of Run.
+func (mr *MockLanguageMockRecorder) Run(p interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockLanguage)(nil).Run), p)
 }

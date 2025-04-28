@@ -8,7 +8,7 @@ import (
 
 type testcaseRunner struct{}
 
-func (r *testcaseRunner) Run(l *model.Language, t *model.TestCase) ([]byte, []byte, error) {
+func (r *testcaseRunner) Run(l model.Language, t *model.TestCase) ([]byte, []byte, error) {
 	inflow := bytes.NewReader(t.Input)
 	outflow := bytes.NewBuffer(nil)
 	errflow := bytes.NewBuffer(nil)
